@@ -52,7 +52,7 @@ class ExpressionLanguageTest extends KernelTestCase
 
         static::assertEquals(
             'hello',
-            $this->expressionLanguage->evaluate('robot.sayHello', ['robot' => $robot]),
+            $this->expressionLanguage->evaluate('robot.sayHello()', ['robot' => $robot]),
             'You must to implement the expression language evaluate method'
         );
     }

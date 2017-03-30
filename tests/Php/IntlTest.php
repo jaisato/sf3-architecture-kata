@@ -24,7 +24,7 @@ class IntlTest extends KernelTestCase
 
     public function testGetCurrencyName()
     {
-        static::assertEquals('Euro', $this->intl->getCurrencySymbol('EUR'));
+        static::assertEquals('Euro', $this->intl->getCurrencyName('EUR'));
     }
 
     public function testGetCurrency()

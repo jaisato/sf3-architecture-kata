@@ -37,7 +37,7 @@ class OptionsResolverTest extends KernelTestCase
 
     public function testOptionalFields()
     {
-        self::assertTrue(
+        self::assertFalse(
             $this->optionsResolver->optionsResolver->isRequired('port'),
             'You must set option "port" as optional"'
         );
