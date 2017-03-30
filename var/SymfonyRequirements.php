@@ -10,8 +10,8 @@
  */
 
 /*
- * Users of PHP 5.2 should be able to run the requirements checks.
- * This is why the file and all classes must be compatible with PHP 5.2+
+ * Users of Php 5.2 should be able to run the requirements checks.
+ * This is why the file and all classes must be compatible with Php 5.2+
  * (e.g. not using namespaces and closures).
  *
  * ************** CAUTION **************
@@ -24,7 +24,7 @@
  */
 
 /**
- * Represents a single PHP requirement, e.g. an installed extension.
+ * Represents a single Php requirement, e.g. an installed extension.
  * It can be a mandatory requirement or an optional recommendation.
  * There is a special subclass, named PhpIniRequirement, to check a php.ini configuration.
  *
@@ -108,7 +108,7 @@ class Requirement
 }
 
 /**
- * Represents a PHP requirement in form of a php.ini configuration.
+ * Represents a Php requirement in form of a php.ini configuration.
  *
  * @author Tobias Schultze <http://tobion.de>
  */
@@ -121,8 +121,8 @@ class PhpIniRequirement extends Requirement
      * @param bool|callback $evaluation        Either a boolean indicating whether the configuration should evaluate to true or false,
      *                                         or a callback function receiving the configuration value as parameter to determine the fulfillment of the requirement
      * @param bool          $approveCfgAbsence If true the Requirement will be fulfilled even if the configuration option does not exist, i.e. ini_get() returns false.
-     *                                         This is helpful for abandoned configs in later PHP versions or configs of an optional extension, like Suhosin.
-     *                                         Example: You require a config to be true but PHP later removes this config and defaults it to true internally.
+     *                                         This is helpful for abandoned configs in later Php versions or configs of an optional extension, like Suhosin.
+     *                                         Serializer: You require a config to be true but Php later removes this config and defaults it to true internally.
      * @param string|null   $testMessage       The message for testing the requirement (when null and $evaluation is a boolean a default message is derived)
      * @param string|null   $helpHtml          The help text formatted in HTML for resolving the problem (when null and $evaluation is a boolean a default help is derived)
      * @param string|null   $helpText          The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
@@ -226,8 +226,8 @@ class RequirementCollection implements IteratorAggregate
      * @param bool|callback $evaluation        Either a boolean indicating whether the configuration should evaluate to true or false,
      *                                         or a callback function receiving the configuration value as parameter to determine the fulfillment of the requirement
      * @param bool          $approveCfgAbsence If true the Requirement will be fulfilled even if the configuration option does not exist, i.e. ini_get() returns false.
-     *                                         This is helpful for abandoned configs in later PHP versions or configs of an optional extension, like Suhosin.
-     *                                         Example: You require a config to be true but PHP later removes this config and defaults it to true internally.
+     *                                         This is helpful for abandoned configs in later Php versions or configs of an optional extension, like Suhosin.
+     *                                         Serializer: You require a config to be true but Php later removes this config and defaults it to true internally.
      * @param string        $testMessage       The message for testing the requirement (when null and $evaluation is a boolean a default message is derived)
      * @param string        $helpHtml          The help text formatted in HTML for resolving the problem (when null and $evaluation is a boolean a default help is derived)
      * @param string|null   $helpText          The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
@@ -244,8 +244,8 @@ class RequirementCollection implements IteratorAggregate
      * @param bool|callback $evaluation        Either a boolean indicating whether the configuration should evaluate to true or false,
      *                                         or a callback function receiving the configuration value as parameter to determine the fulfillment of the requirement
      * @param bool          $approveCfgAbsence If true the Requirement will be fulfilled even if the configuration option does not exist, i.e. ini_get() returns false.
-     *                                         This is helpful for abandoned configs in later PHP versions or configs of an optional extension, like Suhosin.
-     *                                         Example: You require a config to be true but PHP later removes this config and defaults it to true internally.
+     *                                         This is helpful for abandoned configs in later Php versions or configs of an optional extension, like Suhosin.
+     *                                         Serializer: You require a config to be true but Php later removes this config and defaults it to true internally.
      * @param string        $testMessage       The message for testing the requirement (when null and $evaluation is a boolean a default message is derived)
      * @param string        $helpHtml          The help text formatted in HTML for resolving the problem (when null and $evaluation is a boolean a default help is derived)
      * @param string|null   $helpText          The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
@@ -360,7 +360,7 @@ class RequirementCollection implements IteratorAggregate
     }
 
     /**
-     * Returns the PHP configuration file (php.ini) path.
+     * Returns the Php configuration file (php.ini) path.
      *
      * @return string|false php.ini file path
      */
@@ -402,18 +402,18 @@ class SymfonyRequirements extends RequirementCollection
         if (false !== $requiredPhpVersion) {
             $this->addRequirement(
                 version_compare($installedPhpVersion, $requiredPhpVersion, '>='),
-                sprintf('PHP version must be at least %s (%s installed)', $requiredPhpVersion, $installedPhpVersion),
-                sprintf('You are running PHP version "<strong>%s</strong>", but Symfony needs at least PHP "<strong>%s</strong>" to run.
-                Before using Symfony, upgrade your PHP installation, preferably to the latest version.',
+                sprintf('Php version must be at least %s (%s installed)', $requiredPhpVersion, $installedPhpVersion),
+                sprintf('You are running Php version "<strong>%s</strong>", but Symfony needs at least Php "<strong>%s</strong>" to run.
+                Before using Symfony, upgrade your Php installation, preferably to the latest version.',
                     $installedPhpVersion, $requiredPhpVersion),
-                sprintf('Install PHP %s or newer (installed version is %s)', $requiredPhpVersion, $installedPhpVersion)
+                sprintf('Install Php %s or newer (installed version is %s)', $requiredPhpVersion, $installedPhpVersion)
             );
         }
 
         $this->addRequirement(
             version_compare($installedPhpVersion, '5.3.16', '!='),
-            'PHP version must not be 5.3.16 as Symfony won\'t work properly with it',
-            'Install PHP 5.3.17 or newer (or downgrade to an earlier PHP version)'
+            'Php version must not be 5.3.16 as Symfony won\'t work properly with it',
+            'Install Php 5.3.17 or newer (or downgrade to an earlier Php version)'
         );
 
         $this->addRequirement(
@@ -457,8 +457,8 @@ class SymfonyRequirements extends RequirementCollection
 
             $this->addRequirement(
                 isset($timezones[@date_default_timezone_get()]),
-                sprintf('Configured default timezone "%s" must be supported by your installation of PHP', @date_default_timezone_get()),
-                'Your default timezone is not supported by PHP. Check for typos in your <strong>php.ini</strong> file and have a look at the list of deprecated timezones at <a href="http://php.net/manual/en/timezones.others.php">http://php.net/manual/en/timezones.others.php</a>.'
+                sprintf('Configured default timezone "%s" must be supported by your installation of Php', @date_default_timezone_get()),
+                'Your default timezone is not supported by Php. Check for typos in your <strong>php.ini</strong> file and have a look at the list of deprecated timezones at <a href="http://php.net/manual/en/timezones.others.php">http://php.net/manual/en/timezones.others.php</a>.'
             );
         }
 
@@ -502,7 +502,7 @@ class SymfonyRequirements extends RequirementCollection
             if (version_compare($installedPhpVersion, '5.4.0', '>=')) {
                 $this->addRequirement(
                     version_compare(phpversion('apc'), '3.1.13', '>='),
-                    'APC version must be at least 3.1.13 when using PHP 5.4',
+                    'APC version must be at least 3.1.13 when using Php 5.4',
                     'Upgrade your <strong>APC</strong> extension (3.1.13+).'
                 );
             } else {
@@ -583,48 +583,48 @@ class SymfonyRequirements extends RequirementCollection
 
         $this->addRecommendation(
             version_compare($installedPhpVersion, '5.3.4', '>='),
-            'You should use at least PHP 5.3.4 due to PHP bug #52083 in earlier versions',
-            'Your project might malfunction randomly due to PHP bug #52083 ("Notice: Trying to get property of non-object"). Install PHP 5.3.4 or newer.'
+            'You should use at least Php 5.3.4 due to Php bug #52083 in earlier versions',
+            'Your project might malfunction randomly due to Php bug #52083 ("Notice: Trying to get property of non-object"). Install Php 5.3.4 or newer.'
         );
 
         $this->addRecommendation(
             version_compare($installedPhpVersion, '5.3.8', '>='),
-            'When using annotations you should have at least PHP 5.3.8 due to PHP bug #55156',
-            'Install PHP 5.3.8 or newer if your project uses annotations.'
+            'When using annotations you should have at least Php 5.3.8 due to Php bug #55156',
+            'Install Php 5.3.8 or newer if your project uses annotations.'
         );
 
         $this->addRecommendation(
             version_compare($installedPhpVersion, '5.4.0', '!='),
-            'You should not use PHP 5.4.0 due to the PHP bug #61453',
-            'Your project might not work properly due to the PHP bug #61453 ("Cannot dump definitions which have method calls"). Install PHP 5.4.1 or newer.'
+            'You should not use Php 5.4.0 due to the Php bug #61453',
+            'Your project might not work properly due to the Php bug #61453 ("Cannot dump definitions which have method calls"). Install Php 5.4.1 or newer.'
         );
 
         $this->addRecommendation(
             version_compare($installedPhpVersion, '5.4.11', '>='),
-            'When using the logout handler from the Symfony Security Component, you should have at least PHP 5.4.11 due to PHP bug #63379 (as a workaround, you can also set invalidate_session to false in the security logout handler configuration)',
-            'Install PHP 5.4.11 or newer if your project uses the logout handler from the Symfony Security Component.'
+            'When using the logout handler from the Symfony Security Component, you should have at least Php 5.4.11 due to Php bug #63379 (as a workaround, you can also set invalidate_session to false in the security logout handler configuration)',
+            'Install Php 5.4.11 or newer if your project uses the logout handler from the Symfony Security Component.'
         );
 
         $this->addRecommendation(
             (version_compare($installedPhpVersion, '5.3.18', '>=') && version_compare($installedPhpVersion, '5.4.0', '<'))
             ||
             version_compare($installedPhpVersion, '5.4.8', '>='),
-            'You should use PHP 5.3.18+ or PHP 5.4.8+ to always get nice error messages for fatal errors in the development environment due to PHP bug #61767/#60909',
-            'Install PHP 5.3.18+ or PHP 5.4.8+ if you want nice error messages for all fatal errors in the development environment.'
+            'You should use Php 5.3.18+ or Php 5.4.8+ to always get nice error messages for fatal errors in the development environment due to Php bug #61767/#60909',
+            'Install Php 5.3.18+ or Php 5.4.8+ if you want nice error messages for all fatal errors in the development environment.'
         );
 
         if (null !== $pcreVersion) {
             $this->addRecommendation(
                 $pcreVersion >= 8.0,
                 sprintf('PCRE extension should be at least version 8.0 (%s installed)', $pcreVersion),
-                '<strong>PCRE 8.0+</strong> is preconfigured in PHP since 5.3.2 but you are using an outdated version of it. Symfony probably works anyway but it is recommended to upgrade your PCRE extension.'
+                '<strong>PCRE 8.0+</strong> is preconfigured in Php since 5.3.2 but you are using an outdated version of it. Symfony probably works anyway but it is recommended to upgrade your PCRE extension.'
             );
         }
 
         $this->addRecommendation(
             class_exists('DomDocument'),
-            'PHP-DOM and PHP-XML modules should be installed',
-            'Install and enable the <strong>PHP-DOM</strong> and the <strong>PHP-XML</strong> modules.'
+            'Php-DOM and Php-XML modules should be installed',
+            'Install and enable the <strong>Php-DOM</strong> and the <strong>Php-XML</strong> modules.'
         );
 
         $this->addRecommendation(
@@ -670,7 +670,7 @@ class SymfonyRequirements extends RequirementCollection
             $this->addRecommendation(
                 null !== new Collator('fr_FR'),
                 'intl extension should be correctly configured',
-                'The intl extension does not behave properly. This problem is typical on PHP 5.3.X x64 WIN builds.'
+                'The intl extension does not behave properly. This problem is typical on Php 5.3.X x64 WIN builds.'
             );
 
             // check for compatible ICU versions (only done when you have the intl extension)
@@ -697,7 +697,7 @@ class SymfonyRequirements extends RequirementCollection
                 $this->addRecommendation(
                     \Symfony\Component\Intl\Intl::getIcuDataVersion() <= \Symfony\Component\Intl\Intl::getIcuVersion(),
                     sprintf('intl ICU version installed on your system is outdated (%s) and does not match the ICU data bundled with Symfony (%s)', \Symfony\Component\Intl\Intl::getIcuVersion(), \Symfony\Component\Intl\Intl::getIcuDataVersion()),
-                    'To get the latest internationalization data upgrade the ICU system package and the intl PHP extension.'
+                    'To get the latest internationalization data upgrade the ICU system package and the intl Php extension.'
                 );
                 if (\Symfony\Component\Intl\Intl::getIcuDataVersion() <= \Symfony\Component\Intl\Intl::getIcuVersion()) {
                     $this->addRecommendation(
@@ -733,8 +733,8 @@ class SymfonyRequirements extends RequirementCollection
 
         $this->addRecommendation(
             $accelerator,
-            'a PHP accelerator should be installed',
-            'Install and/or enable a <strong>PHP accelerator</strong> (highly recommended).'
+            'a Php accelerator should be installed',
+            'Install and/or enable a <strong>Php accelerator</strong> (highly recommended).'
         );
 
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -798,9 +798,9 @@ class SymfonyRequirements extends RequirementCollection
     }
 
     /**
-     * Defines PHP required version from Symfony version.
+     * Defines Php required version from Symfony version.
      *
-     * @return string|false The PHP required version or false if it could not be guessed
+     * @return string|false The Php required version or false if it could not be guessed
      */
     protected function getPhpRequiredVersion()
     {

@@ -13,8 +13,20 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="exercise1">
+            <directory>tests/Php</directory>
+        </testsuite>
+        <testsuite name="exercise2">
+            <directory>tests/Filesystem</directory>
+        </testsuite>
+        <testsuite name="exercise3">
+            <directory>tests/Bundle</directory>
+        </testsuite>
+        <testsuite name="exercise4">
+            <directory>tests/Routing</directory>
+        </testsuite>
+        <testsuite name="exercise5">
+            <directory>tests/DependencyInjection</directory>
         </testsuite>
     </testsuites>
 
