@@ -49,4 +49,16 @@ class FinderDecorator
     {
         // TODO
     }
+
+    /**
+     * Returns the content of a file
+     *
+     * @param string $filePath
+     *
+     * @return string
+     */
+    public function showContentsFromAFile(string $filePath)
+    {
+        // TODO
+    }
 }

@@ -48,4 +48,15 @@ class FinderTest extends KernelTestCase
             'You must to implement getFilesWithIncludedText method'
         );
     }
+
+    public function testGettingContentFromFile()
+    {
+        $file = __DIR__ . '/files/aFile.txt';
+
+        $content = $this->finder->showContentsFromAFile($file);
+
+        self::assertStringEqualsFile(
+            $file, $content, 'you must to implement showContentsFromAFile method'
+        );
+    }
 }

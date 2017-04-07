@@ -39,15 +39,4 @@ class FilesystemTest extends KernelTestCase
 
         self::assertFileExists($file, 'You must to implement createAnEmptyFile method');
     }
-
-    public function testGettingContentFromFile()
-    {
-        $file = __DIR__ . '/files/aFile.txt';
-
-        $content = $this->fileSystem->showContentsFromAFile($file);
-
-        self::assertStringEqualsFile(
-            $file, $content, 'you must to implement showContentsFromAFile method'
-        );
-    }
 }
