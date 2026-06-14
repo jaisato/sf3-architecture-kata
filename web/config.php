@@ -372,8 +372,8 @@ $hasMinorProblems = (bool) count($minorProblems);
                             <p>Major problems have been detected and <strong>must</strong> be fixed before continuing:</p>
                             <ol>
                                 <?php foreach ($majorProblems as $problem): ?>
-                                    <li><?php echo $problem->getTestMessage() ?>
-                                        <p class="help"><em><?php echo $problem->getHelpHtml() ?></em></p>
+                                    <li><?php echo htmlspecialchars($problem->getTestMessage(), ENT_QUOTES, 'UTF-8') ?>
+                                        <p class="help"><em><?php echo $problem->getHelpHtml() /* Note: getHelpHtml() returns pre-sanitized HTML from Symfony internals */ ?></em></p>
                                     </li>
                                 <?php endforeach; ?>
                             </ol>
@@ -383,12 +383,12 @@ $hasMinorProblems = (bool) count($minorProblems);
                             <h2>Recommendations</h2>
                             <p>
                                 <?php if ($hasMajorProblems): ?>Additionally, to<?php else: ?>To<?php endif; ?> enhance your Symfony experience,
-                                it’s recommended that you fix the following:
+                                it's recommended that you fix the following:
                             </p>
                             <ol>
                                 <?php foreach ($minorProblems as $problem): ?>
-                                    <li><?php echo $problem->getTestMessage() ?>
-                                        <p class="help"><em><?php echo $problem->getHelpHtml() ?></em></p>
+                                    <li><?php echo htmlspecialchars($problem->getTestMessage(), ENT_QUOTES, 'UTF-8') ?>
+                                        <p class="help"><em><?php echo $problem->getHelpHtml() /* Note: getHelpHtml() returns pre-sanitized HTML from Symfony internals */ ?></em></p>
                                     </li>
                                 <?php endforeach; ?>
                             </ol>
@@ -397,7 +397,7 @@ $hasMinorProblems = (bool) count($minorProblems);
                         <?php if ($symfonyRequirements->hasPhpIniConfigIssue()): ?>
                             <p id="phpini">*
                                 <?php if ($symfonyRequirements->getPhpIniConfigPath()): ?>
-                                    Changes to the <strong>php.ini</strong> file must be done in "<strong><?php echo $symfonyRequirements->getPhpIniConfigPath() ?></strong>".
+                                    Changes to the <strong>php.ini</strong> file must be done in "<strong><?php echo htmlspecialchars($symfonyRequirements->getPhpIniConfigPath(), ENT_QUOTES, 'UTF-8') ?></strong>".
                                 <?php else: ?>
                                     To change settings, create a "<strong>php.ini</strong>".
                                 <?php endif; ?>
