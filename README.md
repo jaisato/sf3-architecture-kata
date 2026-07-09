@@ -2,6 +2,8 @@
 
 The goal of this kata is work your knowledge about "Symfony architecture" of [Symfony certification](https://sensiolabs.com/en/symfony/certification.html)
 
+> **Security note:** This kata targets Symfony 3.2 and PHP 5.5.9, which are both end-of-life and have known unpatched CVEs. Upgrading to a supported Symfony (LTS) and PHP version is recommended. Also, `phpunit/phpunit` should be moved to `require-dev` in `composer.json` (left as a recommendation here to avoid invalidating `composer.lock`).
+
 #### Exercise 1:
 **Implement:** Classes of namespace "Component\PHP"
 **Check:** php vendor/bin/phpunit --testsuirce=exercise1
