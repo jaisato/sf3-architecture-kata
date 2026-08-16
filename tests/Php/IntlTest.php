@@ -17,7 +17,7 @@ class IntlTest extends KernelTestCase
     /** @var IntlDecorator */
     private $intl;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->intl= new IntlDecorator();
     }

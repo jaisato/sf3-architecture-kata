@@ -26,7 +26,7 @@ class PropertyInfoTest extends KernelTestCase
 
     public $something;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->propertyInfo = new PropertyInfoExtractorDecorator();
     }

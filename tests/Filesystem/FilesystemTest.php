@@ -17,7 +17,7 @@ class FilesystemTest extends KernelTestCase
     /** @var  FilesystemDecorator */
     private $fileSystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fileSystem = new FilesystemDecorator();
     }
