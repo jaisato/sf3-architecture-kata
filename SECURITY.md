@@ -35,7 +35,7 @@ material de estudio, **no como algo desplegable**.
 
 `composer.json` declara ahora:
 
-- `require.php = ">=7.1.3"`
+- `require.php = ">=7.1.3 <8.0"`
 - `config.platform.php = "7.1.3"`
 
 Los dos valores coinciden **a propósito**. `platform` hace que Composer resuelva
@@ -47,6 +47,20 @@ PHP >= 7.1.3.
 
 7.1.3 es el suelo real del `composer.lock`, no una elección arbitraria: es el
 mayor de los mínimos que declaran los paquetes bloqueados.
+
+El **techo** es igual de necesario. Sin `<8.0`, un PHP 8.x quedaba declarado
+como soportado, y como `platform` finge un 7.1.3 la instalación se completaba
+sin quejarse — pero el conjunto bloqueado no funciona ahí:
+`doctrine/doctrine-cache-bundle` exige `^7.1` y PHPUnit `^5.6 || ^7.0`.
+`composer check-platform-reqs --lock` sobre PHP 8.4 lo confirma:
+
+```
+php   8.4.19   doctrine/doctrine-cache-bundle requires php (^7.1)   failed
+```
+
+Es decir: el rango declarado ahora coincide con lo que el lock puede ejecutar
+de verdad, ni más abajo ni más arriba. Subir de ahí es la migración a una rama
+con soporte que se describe arriba.
 
 Fijar `platform` sigue siendo necesario para que el lock sea reproducible: sin
 ello la resolución depende del PHP de quien ejecute `composer`, y en un PHP 8.4
