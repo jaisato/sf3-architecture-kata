@@ -18,7 +18,7 @@ class ExpressionLanguageTest extends KernelTestCase
     /** @var ExpressionLanguageDecorator */
     private $expressionLanguage;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->expressionLanguage = new ExpressionLanguageDecorator(new ExpressionLanguage());
     }

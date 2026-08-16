@@ -17,7 +17,7 @@ class FinderTest extends KernelTestCase
     /** @var  FinderDecorator */
     private $finder;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->finder = new FinderDecorator();
     }

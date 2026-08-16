@@ -2,6 +2,22 @@
 
 The goal of this kata is work your knowledge about "Symfony architecture" of [Symfony certification](https://sensiolabs.com/en/symfony/certification.html)
 
+### Requirements
+
+**PHP >= 7.2.5 and < 8.0**, plus Git and composer.
+
+The locked dependency set (Symfony 3.4, `doctrine/doctrine-cache-bundle`) does
+not run on PHP 8. `composer.json` pins `config.platform.php` so the lock file
+resolves reproducibly — which also means Composer validates against that
+synthetic version rather than your interpreter, so a `composer install` on an
+unsupported PHP would otherwise succeed and only fail later.
+`bin/check-php-version.php` runs on the real interpreter before install/update
+and stops that. See `SECURITY.md`.
+
+The test suite runs on PHPUnit 8.5 (`php vendor/bin/phpunit`); the older
+`simple-phpunit` bootstrap no longer works, since it goes through Composer 1,
+whose Packagist support shut down in September 2025.
+
 #### Exercise 1:
 **Implement:** Classes of namespace "Component\PHP"
 **Check:** php vendor/bin/phpunit --testsuirce=exercise1

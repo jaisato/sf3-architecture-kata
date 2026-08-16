@@ -16,3 +16,6 @@
 /web/bundles/
 .idea/
 .DS_Store/
+
+# PHPUnit 8 result cache
+/.phpunit.result.cache

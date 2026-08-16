@@ -23,7 +23,7 @@ class PropertyAccessTest extends KernelTestCase
     /** @var PropertyAccessDecorator */
     private $propertyAccess;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->array = ['name' => 'Gile'];
         $this->object = new class {

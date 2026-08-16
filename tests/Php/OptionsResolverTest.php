@@ -17,7 +17,7 @@ class OptionsResolverTest extends KernelTestCase
     /** @var  OptionsResolverDecorator */
     private $optionsResolver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->optionsResolver = new OptionsResolverDecorator();
     }

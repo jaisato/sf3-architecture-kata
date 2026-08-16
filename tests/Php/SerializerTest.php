@@ -19,7 +19,7 @@ class SerializerTest extends KernelTestCase
     /** @var  SerializerDecorator */
     private $serializerDecorator;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->serializerDecorator = new SerializerDecorator();
     }
