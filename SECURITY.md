@@ -101,11 +101,14 @@ actualizar `symfony/polyfill-intl-idn` (1.38.1 exige >= 7.2) y
 cerrados. Estrechar el rango declarado a cambio de cerrarlos es razonable en un
 proyecto que no es desplegable: PHP 7.1 perdió soporte en diciembre de 2019.
 
-7.1.3 es el suelo real del `composer.lock`, no una elección arbitraria: es el
-mayor de los mínimos que declaran los paquetes bloqueados.
+**7.2.5 es el suelo real del `composer.lock`**, no una elección arbitraria: es
+el mayor de los mínimos que declaran los paquetes bloqueados
+-`symfony/service-contracts`, `symfony/http-client`,
+`symfony/http-client-contracts` y `symfony/mime` exigen todos `>= 7.2.5`-. Twig
+2.16.1, que marcaba el suelo anterior de 7.1.3, ya no es el más exigente.
 
 El **techo** es igual de necesario. Sin `<8.0`, un PHP 8.x quedaba declarado
-como soportado, y como `platform` finge un 7.1.3 la instalación se completaba
+como soportado, y como `platform` finge un 7.2.5 la instalación se completaba
 sin quejarse — pero el conjunto bloqueado no funciona ahí:
 `doctrine/doctrine-cache-bundle` exige `^7.1` y PHPUnit `^5.6 || ^7.0`.
 `composer check-platform-reqs --lock` sobre PHP 8.4 lo confirma:
