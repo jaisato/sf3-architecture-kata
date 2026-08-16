@@ -122,6 +122,26 @@ Fijar `platform` sigue siendo necesario para que el lock sea reproducible: sin
 ello la resolución depende del PHP de quien ejecute `composer`, y en un PHP 8.4
 moderno `composer update` falla directamente.
 
+### El punto ciego de `platform`, y cómo se tapa
+
+`config.platform` tiene un efecto secundario incómodo: Composer valida **todas**
+las restricciones -incluida `require.php`- contra ese 7.2.5 sintético y no
+contra el intérprete real, así que `composer install` en un PHP 8 se completa
+sin una queja y la aplicación falla después, al ejecutarse. El rango declarado,
+por sí solo, no impide nada.
+
+Por eso `bin/check-php-version.php` corre en `pre-install-cmd` y
+`pre-update-cmd`: se ejecuta sobre el intérprete de verdad, sin shim, y aborta
+antes de instalar nada. En este entorno (PHP 8.4.19) devuelve código 1.
+
+### `allow-plugins`
+
+`doctrine/orm` 2.7.5 arrastra `composer/package-versions-deprecated`, de tipo
+`composer-plugin`. Desde Composer 2.2 un plugin no declarado se bloquea y, en
+modo no interactivo -CI, despliegue-, la instalación **aborta** en vez de
+limitarse a omitirlo. Queda permitido de forma explícita y acotada a ese
+paquete.
+
 ## Paquetes abandonados
 
 `sensio/distribution-bundle`, `sensio/framework-extra-bundle`,
