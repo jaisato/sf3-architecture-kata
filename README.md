@@ -20,12 +20,12 @@ whose Packagist support shut down in September 2025.
 
 #### Exercise 1:
 **Implement:** Classes of namespace "Component\PHP"
-**Check:** php vendor/bin/phpunit --testsuirce=exercise1
+**Check:** php vendor/bin/phpunit --testsuite=exercise1
 **Test**: Answer the next [questions](questions_php.md)
 
 #### Exercise 2:
 **Implement:** Classes of namespace "Component\Filesystem"
-**Check:** php vendor/bin/phpunit --testsuirce=exercise2
+**Check:** php vendor/bin/phpunit --testsuite=exercise2
 **Test**: Answer the next [questions](questions_filesystem.md)
 
 #### Exercise 3:
@@ -38,14 +38,14 @@ Add a reusable bundle to the kernel using best practices:
     - Has a command about "Topic"
     - Has the next resource directories: public, translations, config.
     
-**Check:** php vendor/bin/phpunit --testsuirce=exercise3
+**Check:** php vendor/bin/phpunit --testsuite=exercise3
 
 #### Exercise 4:
 Create the next routes to your controller:
     - POST /topics
     - GET /topics
 
-**Check:** php vendor/bin/phpunit --testsuirce=exercise4    
+**Check:** php vendor/bin/phpunit --testsuite=exercise4    
 
 #### Exercise 5:
 **Implement:**
@@ -53,4 +53,4 @@ Create the next routes to your controller:
     - Create a custom extension in your bundle named CustomExtension
     - Create a service class "TopicManager" inside your bundle and add to the services (use CustomExtension to load)
 
-**Check:** php vendor/bin/phpunit --testsuirce=exercise5
+**Check:** php vendor/bin/phpunit --testsuite=exercise5
