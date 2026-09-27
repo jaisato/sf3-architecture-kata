@@ -26,7 +26,7 @@ whose Packagist support shut down in September 2025.
 #### Exercise 2:
 **Implement:** Classes of namespace "Component\Filesystem"
 **Check:** php vendor/bin/phpunit --testsuite=exercise2
-**Test**: Answer the next [questions](questions_filesystem.md)
+**Test**: there is no question sheet for this exercise yet (`questions_filesystem.md` was never added to the repository).
 
 #### Exercise 3:
 **Implement:**
