@@ -17,14 +17,29 @@ class FilesystemTest extends KernelTestCase
     /** @var  FilesystemDecorator */
     private $fileSystem;
 
+    /** @var string[] Paths created by a test, removed after it. */
+    private $created = [];
+
     public function setUp(): void
     {
         $this->fileSystem = new FilesystemDecorator();
     }
 
+    protected function tearDown(): void
+    {
+        foreach ($this->created as $path) {
+            if (is_dir($path)) {
+                @rmdir($path);
+            } elseif (is_file($path)) {
+                @unlink($path);
+            }
+        }
+        $this->created = [];
+    }
+
     public function testCreatingDirectories()
     {
-        $directoryName = '/tmp/' . mt_rand();
+        $directoryName = $this->created[] = sys_get_temp_dir() . '/' . uniqid('sf-kata-', true);
 
         $this->fileSystem->createDirectory($directoryName);
 
@@ -33,7 +48,7 @@ class FilesystemTest extends KernelTestCase
 
     public function testCreatingFiles()
     {
-        $file = '/tmp/' . mt_rand() . 'txt';
+        $file = $this->created[] = sys_get_temp_dir() . '/' . uniqid('sf-kata-', true) . '.txt';
 
         $this->fileSystem->createAnEmptyFile($file);
 
