@@ -141,6 +141,8 @@ lo que sigue vigente:
 
 Lo que ya no existe: la Standard Edition y el `AppBundle` (desde Symfony 4,
 Flex y `symfony/skeleton`), el componente ClassLoader (eliminado en 4.0),
-`ContainerAwareEventDispatcher` (4.0), el componente Templating (5.0) y el
+`ContainerAwareEventDispatcher` (4.0), la integración de Templating con
+FrameworkBundle (eliminada en 5.0; el componente `symfony/templating` se
+publicó hasta la 6.4, y su última versión es la 6.4.24, de julio de 2025) y el
 `ParamConverter` de SensioFrameworkExtraBundle, abandonado y sustituido por
 los value resolvers de los argumentos de los controladores.
