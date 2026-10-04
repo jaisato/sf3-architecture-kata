@@ -123,6 +123,26 @@ ejercicios no corren en `master`, porque fallarían siempre. En la rama
 auditoría cada lunes y Dependabot propone las actualizaciones. Ver
 [`SECURITY.md`](SECURITY.md).
 
+### La rama `solucion`
+
+`solucion` desciende de `master`: es `master` con los ejercicios resueltos.
+`solucion.yml` comprueba que siguen teniendo solución en cada pull request a
+`master`, cada lunes y a mano: fusiona el commit en prueba sobre `solucion` y
+pasa la suite entera y `composer audit`. No es un check obligatorio.
+
+`solucion` se pone al día integrando `master` con un merge, nunca con un
+rebase, para que siga descendiendo de `master`:
+
+```bash
+git switch solucion
+git merge master        # los conflictos se resuelven aquí
+composer check          # en solucion, con la suite entera
+git push
+```
+
+Si `solucion.yml` avisa de conflictos en una pull request, se puede integrar
+de la misma forma su rama antes de fusionarla, o `master` justo después.
+
 ## La arquitectura de Symfony, en 2026
 
 La kata venía con una presentación de 2017 (`presentation.pptx`, sobre
