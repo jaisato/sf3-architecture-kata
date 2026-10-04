@@ -1,0 +1,40 @@
+# CI: composer validate --strict, php -l en PHP 8.4 y 8.5, php-cs-fixer, PHPStan,
+# lint:container y lint:yaml, la suite smoke y composer audit: todo lo ejecuta el
+# workflow reutilizable de jaisato/.github.
+#
+# Las suites de los ejercicios fallan a propósito hasta que se resuelven, así que
+# en master solo corre la suite smoke (el kernel arranca y las rutas cargan). La
+# rama `solucion` ejecuta la suite entera.
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    name: PHP
+    uses: jaisato/.github/.github/workflows/symfony-ci.yml@main
+    with:
+      # composer.json pide >=8.4: php -l y la suite corren en 8.4 y 8.5; las
+      # herramientas, en 8.4 (PHPStan analiza para 8.4 por phpVersion).
+      php-versions: '["8.4", "8.5"]'
+      tools-php-version: "8.4"
+      # intl: el ejercicio 1 usa el componente Intl.
+      extensions: intl, mbstring, zip
+      # phpstan-symfony lee el XML del contenedor de dev (lo mismo que composer stan).
+      pre-analysis-command: php bin/console cache:warmup --env=dev --no-interaction
+      # lint:container y lint:yaml --parse-tags.
+      extra-lint-command: composer lint
+      mysql: false
+      phpunit-args: --testsuite smoke
+      # La suite smoke no cubre los ejercicios: un umbral no mediría nada.
+      coverage-min: 0
