@@ -1,5 +1,11 @@
 # Kata de arquitectura de Symfony
 
+> **Rama `solucion`.** Aquí los cinco ejercicios están resueltos y
+> `composer test` pasa entero: el código de los ejercicios 1 y 2 está en
+> `src/Component/` y el bundle de los ejercicios 3 a 5, en
+> [`bundles/AcmeBlogBundle/`](bundles/AcmeBlogBundle/). Los cuestionarios
+> tienen las respuestas al final. Para hacer la kata, empieza desde `master`.
+
 Una kata para practicar la parte de arquitectura del temario de la
 [certificación de Symfony](https://certification.symfony.com/): componentes,
 bundles, rutas y contenedor de servicios. Daniel Funes la escribió en 2017

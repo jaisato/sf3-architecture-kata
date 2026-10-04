@@ -86,3 +86,15 @@ a) `name`, `lastName` y `address`.
 b) Solo `address`: el normalizador escribe en las propiedades públicas y a través de los setters, e ignora `age`.
 c) `name` y `address`.
 d) Ninguna: lanza una excepción por el atributo desconocido `age`.
+
+---
+
+### Respuestas
+
+1. **d)** `RuntimeException`: *Unable to get property "apple" of non-object "fruit".*
+2. **d)** El compilador traduce el array literal a sintaxis PHP con índices explícitos y pone paréntesis en cada operación binaria.
+3. **b)** Los datos vienen de ICU y se distribuyen con el componente; el locale por defecto lo da `\Locale::getDefault()`, de la extensión `intl`.
+4. **c)** PropertyAccess usa el getter (`getPrice()`) sin que haya que nombrarlo.
+5. **c)** Sin getters ni setters, `ReflectionExtractor` solo lista las propiedades públicas.
+6. **b)** `name` es privada y no tiene setter, `lastName` no viene en el XML y `age` no existe: con `allow_extra_attributes` a `true`, el valor por defecto, se ignora.
+

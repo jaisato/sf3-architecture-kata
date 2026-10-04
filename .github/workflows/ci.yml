@@ -1,10 +1,9 @@
 # CI: composer validate --strict, php -l en PHP 8.4 y 8.5, php-cs-fixer, PHPStan,
-# lint:container y lint:yaml, la suite smoke y composer audit: todo lo ejecuta el
+# lint:container y lint:yaml, la suite entera y composer audit: todo lo ejecuta el
 # workflow reutilizable de jaisato/.github.
 #
-# Las suites de los ejercicios fallan a propósito hasta que se resuelven, así que
-# en master solo corre la suite smoke (el kernel arranca y las rutas cargan). La
-# rama `solucion` ejecuta la suite entera.
+# Rama `solucion`: los cinco ejercicios están resueltos, así que corre la suite
+# entera (smoke y exercise1 a exercise5). En master solo corre smoke.
 name: CI
 
 on:
@@ -35,6 +34,6 @@ jobs:
       # lint:container y lint:yaml --parse-tags.
       extra-lint-command: composer lint
       mysql: false
-      phpunit-args: --testsuite smoke
-      # La suite smoke no cubre los ejercicios: un umbral no mediría nada.
+      # php -l también sobre el bundle de los ejercicios 3 a 5.
+      lint-paths: src tests config public bundles
       coverage-min: 0
