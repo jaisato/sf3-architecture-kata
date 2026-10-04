@@ -151,3 +151,13 @@ paquete.
 `sensio/generator-bundle`, `sensiolabs/security-checker`,
 `swiftmailer/swiftmailer` y `symfony/swiftmailer-bundle` están abandonados.
 Sustituirlos forma parte de la misma migración.
+
+## Actualizaciones menores del lock
+
+Con `composer update phpunit/phpunit 'symfony/polyfill-*' -W` (la plataforma
+fijada en 7.2.5 hace que la resolución sea la misma en cualquier intérprete):
+`phpunit/phpunit` 8.5.54 → 8.5.55 y los polyfills de Symfony (`iconv`,
+`intl-icu`, `intl-idn`, `intl-normalizer`, `mbstring`, `php80`) → 1.43.0. La
+suite se ha ejecutado sobre PHP 7.4 (contenedor `php:7.4-cli-alpine`) con el
+lock anterior y con el nuevo: el mismo resultado y exactamente los mismos
+tests fallando, que son los ejercicios de la kata pendientes de implementar.
