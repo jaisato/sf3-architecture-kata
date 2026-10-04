@@ -35,7 +35,7 @@ d) Hay que instalar un paquete distinto para cada idioma.
 a) $accessor->getValue($object, 'object[0].price');
 b) $accessor->getValue($object, 'object.price');
 c) $accessor->getValue($object, 'price');
-d) $accessor->getValue($object, 'get_price');
+d) $accessor->getValue($object, 'getPrice()');
 ```
 
 **5) Con PropertyInfo y un `ReflectionExtractor` sin configurar, ¿qué devuelve `getProperties()` para esta clase?**
@@ -83,6 +83,6 @@ $person = $serializer->deserialize($data, Person::class, 'xml');
 ```
 
 a) `name`, `lastName` y `address`.
-b) Solo `address`: el normalizador escribe en las propiedades públicas y a través de los setters, e ignora `age`.
+b) Solo `address`.
 c) `name` y `address`.
 d) Ninguna: lanza una excepción por el atributo desconocido `age`.
