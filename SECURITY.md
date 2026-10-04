@@ -151,3 +151,32 @@ paquete.
 `sensio/generator-bundle`, `sensiolabs/security-checker`,
 `swiftmailer/swiftmailer` y `symfony/swiftmailer-bundle` están abandonados.
 Sustituirlos forma parte de la misma migración.
+
+## `composer.phar` retirado del repositorio
+
+El repositorio llevaba versionado un `composer.phar` de 2017
+(`Composer version 1.5-dev`, commit `0d5ff633`). No lo usaba nada -el README
+ya indica el `composer` del sistema y los scripts no lo invocan-, pero estaba
+ahí, listo para ejecutarse con `php composer.phar install`:
+
+- Composer 1.x ya no puede instalar nada: Packagist retiró el soporte de
+  Composer 1 en septiembre de 2025, así que el único efecto real de usarlo era
+  un fallo confuso.
+- Esa versión está afectada por, entre otros, CVE-2021-29472 (inyección de
+  comandos a través de URLs de repositorios VCS) y CVE-2022-24828 (inyección
+  de comandos vía nombres de rama/referencias), corregidos en 1.10.22 y
+  1.10.26 respectivamente (2.0.13 y 2.2.12 en la rama 2.x).
+- Un binario ejecutable versionado no se puede revisar en un diff ni lo
+  actualiza nadie.
+
+Hace falta Composer 2 instalado en el sistema (`composer --version`).
+
+## Actualizaciones menores del lock
+
+Con `composer update phpunit/phpunit 'symfony/polyfill-*' -W` (la plataforma
+fijada en 7.2.5 hace que la resolución sea la misma en cualquier intérprete):
+`phpunit/phpunit` 8.5.54 → 8.5.55 y los polyfills de Symfony (`iconv`,
+`intl-icu`, `intl-idn`, `intl-normalizer`, `mbstring`, `php80`) → 1.43.0. La
+suite se ha ejecutado sobre PHP 7.4 (contenedor `php:7.4-cli-alpine`) con el
+lock anterior y con el nuevo: el mismo resultado y exactamente los mismos
+tests fallando, que son los ejercicios de la kata pendientes de implementar.
