@@ -79,10 +79,10 @@ que recibe, así que cada búsqueda empieza con uno nuevo (`Finder::create()`).
 
 ## Ejercicio 4: rutas
 
-**Crea** en `TopicController` estas rutas, que deben responder con un 2xx:
+**Crea** en `TopicController` estas rutas:
 
-- `GET /topics`
-- `POST /topics`
+- `GET /topics`, que debe responder 200.
+- `POST /topics`, que debe responder con un 2xx: 200, o 201 si crea el tema.
 
 Si el controlador es un servicio autoconfigurado con `#[Route]`,
 `config/routes.yaml` (`resource: routing.controllers`) importa sus rutas sin
@@ -112,9 +112,13 @@ que hazlo público o, mejor, úsalo (por ejemplo, desde el controlador).
 ## Calidad y CI
 
 ```bash
-composer check          # validate --strict, php-cs-fixer, PHPStan, lint y la suite smoke
+composer check          # lo que ejecuta el CI, en orden y con el PHP local
 composer cs:fix         # corrige el estilo
 ```
+
+`composer check` ejecuta `composer validate --strict`, `composer audit`,
+php-cs-fixer, PHPStan, los lints y la suite: `smoke` en `master` y la entera en
+`solucion`.
 
 El CI (`.github/workflows/ci.yml`) usa el workflow reutilizable
 [`symfony-ci`](https://github.com/jaisato/.github) de `jaisato/.github`:
@@ -124,6 +128,26 @@ ejercicios no corren en `master`, porque fallarían siempre. En la rama
 `solucion`, el mismo workflow ejecuta la suite entera. `audit.yml` repite la
 auditoría cada lunes y Dependabot propone las actualizaciones. Ver
 [`SECURITY.md`](SECURITY.md).
+
+### La rama `solucion`
+
+`solucion` desciende de `master`: es `master` con los ejercicios resueltos.
+`solucion.yml` comprueba que siguen teniendo solución en cada pull request a
+`master`, cada lunes y a mano: fusiona el commit en prueba sobre `solucion` y
+pasa la suite entera y `composer audit`. No es un check obligatorio.
+
+`solucion` se pone al día integrando `master` con un merge, nunca con un
+rebase, para que siga descendiendo de `master`:
+
+```bash
+git switch solucion
+git merge master        # los conflictos se resuelven aquí
+composer check          # en solucion, con la suite entera
+git push
+```
+
+Si `solucion.yml` avisa de conflictos en una pull request, se puede integrar
+de la misma forma su rama antes de fusionarla, o `master` justo después.
 
 ## La arquitectura de Symfony, en 2026
 
@@ -147,6 +171,8 @@ lo que sigue vigente:
 
 Lo que ya no existe: la Standard Edition y el `AppBundle` (desde Symfony 4,
 Flex y `symfony/skeleton`), el componente ClassLoader (eliminado en 4.0),
-`ContainerAwareEventDispatcher` (4.0), el componente Templating (5.0) y el
+`ContainerAwareEventDispatcher` (4.0), la integración de Templating con
+FrameworkBundle (eliminada en 5.0; el componente `symfony/templating` se
+publicó hasta la 6.4, y su última versión es la 6.4.24, de julio de 2025) y el
 `ParamConverter` de SensioFrameworkExtraBundle, abandonado y sustituido por
 los value resolvers de los argumentos de los controladores.

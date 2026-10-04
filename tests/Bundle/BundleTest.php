@@ -78,13 +78,14 @@ final class BundleTest extends KernelTestCase
     }
 
     /**
-     * Since Symfony 7.3 a command may also be an invokable class with the
-     * #[AsCommand] attribute instead of a subclass of Command.
+     * Since Symfony 7.3 a command may also be an invokable class instead of a
+     * subclass of Command: the #[AsCommand] attribute and an __invoke() method.
      *
      * @param class-string $class
      */
     private static function isInvokableCommand(string $class): bool
     {
-        return [] !== (new \ReflectionClass($class))->getAttributes(AsCommand::class);
+        return [] !== (new \ReflectionClass($class))->getAttributes(AsCommand::class)
+            && method_exists($class, '__invoke');
     }
 }

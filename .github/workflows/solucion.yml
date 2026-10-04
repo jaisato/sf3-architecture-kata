@@ -1,0 +1,73 @@
+name: Rama solucion
+
+# Que los ejercicios sigan teniendo solución. En master las suites de los
+# ejercicios fallan a propósito y ci.yml solo corre smoke, así que nada más
+# avisaría de que un cambio de master (un test, una actualización de
+# Dependabot) deja sin solución algún ejercicio. Este workflow fusiona el commit
+# en prueba sobre la rama `solucion` y pasa allí la suite entera y
+# composer audit.
+#
+# El commit en prueba es, en una pull request, su fusión con master
+# (github.sha); en la pasada semanal, la punta de master, y a mano, la de la
+# rama elegida. No es un check obligatorio. Si la fusión da conflictos, hay que
+# integrar master en solucion con un merge, nunca con un rebase (ver README).
+on:
+  pull_request:
+    branches: [master]
+  schedule:
+    - cron: '47 6 * * 1' # lunes, 06:47 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: solucion-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  solucion:
+    name: Suite entera sobre solucion
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 trae todas las ramas con su historia: hacen falta
+      # origin/solucion y la base común de las dos ramas para fusionar.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fusionar el commit en prueba sobre solucion
+        env:
+          TESTED_SHA: ${{ github.sha }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch --detach origin/solucion
+          if ! git merge --no-edit "$TESTED_SHA"; then
+            conflicts=$(git diff --name-only --diff-filter=U | paste -sd ' ' -)
+            echo "::error title=Conflictos con solucion::La mezcla de $TESTED_SHA con la rama solucion da conflictos (${conflicts:-sin ficheros en conflicto}): hay que integrar master en solucion (git switch solucion && git merge master) y resolverlos allí."
+            exit 1
+          fi
+          git log --oneline --no-decorate -3
+
+      - name: Instalar PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.4'
+          # intl: el ejercicio 1 usa el componente Intl.
+          extensions: intl, mbstring, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: composer install
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Suite entera (smoke y exercise1 a exercise5)
+        run: php bin/phpunit
+
+      # Como en ci.yml y audit.yml, un paquete abandonado se informa pero no
+      # hace fallar el job: es una señal de mantenimiento, no un aviso de
+      # seguridad.
+      - name: composer audit
+        run: composer audit --locked --abandoned=report

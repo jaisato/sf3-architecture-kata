@@ -100,6 +100,7 @@
         ],
         "check": [
             "@composer validate --strict",
+            "@composer audit --locked --abandoned=report",
             "@cs",
             "@stan",
             "@lint",
@@ -118,7 +119,7 @@
         "cs": "Comprueba el estilo sin tocar ficheros",
         "cs:fix": "Corrige el estilo",
         "lint": "Lint del contenedor y de la configuración YAML",
-        "check": "Todo lo que ejecuta el CI, en orden"
+        "check": "Lo que ejecuta el CI, en orden y con el PHP local: validate, audit, cs, stan, lint y la suite"
     },
     "conflict": {
         "symfony/symfony": "*"
