@@ -1,65 +1,61 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php;
+namespace App\Component\Php;
 
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * ################################################################################
  * / !!! IMPORTANT !!!!!!!!                                                       /
- * / YOU HAVE TO PREPARE Component\Php\Serializer\Car in order to pass unit tests  /
+ * / YOU HAVE TO PREPARE App\Component\Php\Serializer\Car to pass the unit tests  /
  * ################################################################################
  *
- * @link http://symfony.com/doc/current/components/serializer.html
+ * @see https://symfony.com/doc/7.4/components/serializer.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class SerializerDecorator
 {
-    /** @var  Serializer */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct()
     {
         // TODO
     }
 
-
     /**
-     * Serialize a object to json.
-     *
-     * @param $object
-     * @return string
+     * Serialize an object to JSON.
      */
-    public function serializeToJson($object)
+    public function serializeToJson(object $object): string
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Serialize a json to xml
-     *
-     * @param $object
-     * @return string
+     * Serialize an object to XML.
      */
-    public function serializeToXml($object)
+    public function serializeToXml(object $object): string
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Deserialize a xml to a specific class.
+     * Deserialize an XML document into an object of the given class.
      *
-     * @param string $class
-     * @param string $xml
+     * @template T of object
      *
-     * @return object
+     * @param class-string<T> $class
+     *
+     * @return T
      */
-    public function deserializeFromXml(string $class, string $xml)
+    public function deserializeFromXml(string $class, string $xml): object
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 }

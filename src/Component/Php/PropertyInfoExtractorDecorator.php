@@ -1,22 +1,27 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php;
+namespace App\Component\Php;
 
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
- * @link http://symfony.com/doc/current/components/property_info.html
+ * Since Symfony 7.1 the type of a property is described by the TypeInfo
+ * component: PropertyInfoExtractor::getType() returns a single
+ * Symfony\Component\TypeInfo\Type, and the old getTypes(), which returned a
+ * list of PropertyInfo\Type, is deprecated.
+ *
+ * @see https://symfony.com/doc/7.4/components/property_info.html
+ * @see https://symfony.com/doc/7.4/components/type_info.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class PropertyInfoExtractorDecorator
 {
-    /** @var PropertyInfoExtractor */
-    private $propertyInfoExtractor;
+    private PropertyInfoExtractor $propertyInfoExtractor;
 
     public function __construct()
     {
@@ -26,71 +31,68 @@ class PropertyInfoExtractorDecorator
     /**
      * First line of the property phpdoc.
      *
-     * @param string $class
-     * @param string $property
-     * @return mixed|null|string
+     * @param class-string $class
      */
-    public function getShortDescriptionOfAProperty(string $class, string $property)
+    public function getShortDescriptionOfAProperty(string $class, string $property): ?string
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
      * All property phpdoc.
      *
-     * @param string $class
-     * @param string $property
-     * @return mixed|null|string
+     * @param class-string $class
      */
-    public function getLongDescriptionOfAProperty(string $class, string $property)
+    public function getLongDescriptionOfAProperty(string $class, string $property): ?string
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
      * Returns all public properties from a class.
      *
-     * @param string $class
-     * @return array
+     * @param class-string $class
+     *
+     * @return list<string>
      */
-    public function getPublicPropertiesFromClass(string $class)
+    public function getPublicPropertiesFromClass(string $class): array
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Provide extensive data type information for a property
+     * Provide extensive data type information for a property.
      *
-     * @param string $class
-     * @param string $property
-     * @return Type[]
+     * @param class-string $class
      */
-    public function getPropertyInfoFromClass(string $class, string $property)
+    public function getPropertyInfoFromClass(string $class, string $property): ?Type
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Checks if property is readable
+     * Checks if property is readable.
      *
-     * @param string $class
-     * @param string $property
-     * @return bool
+     * @param class-string $class
      */
-    public function isPropertyReadable(string $class, string $property)
+    public function isPropertyReadable(string $class, string $property): bool
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Checks if property is writable
+     * Checks if property is writable.
      *
-     * @param string $class
-     * @param string $property
-     * @return bool
+     * @param class-string $class
      */
-    public function isPropertyWritable(string $class, string $property)
+    public function isPropertyWritable(string $class, string $property): bool
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 }

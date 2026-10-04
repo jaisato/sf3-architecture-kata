@@ -1,23 +1,23 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php;
+namespace App\Component\Php;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @link http://symfony.com/doc/current/components/options_resolver.html
+ * @see https://symfony.com/doc/7.4/components/options_resolver.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class OptionsResolverDecorator
 {
-    /** @var  OptionsResolver */
-    public $optionsResolver;
+    public OptionsResolver $optionsResolver;
 
-    private $options;
+    /** @var array<array-key, mixed> Options resolved by setOptions() */
+    private array $options = [];
 
     public function __construct()
     {
@@ -25,22 +25,23 @@ class OptionsResolverDecorator
         $this->configureOptions();
     }
 
-    private function configureOptions()
+    private function configureOptions(): void
     {
         // TODO
     }
 
     /**
-     * Sets $options
-     * @param array $options
+     * Resolves the given options: validates them and fills in the defaults.
+     *
+     * @param array<string, mixed> $options
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
-        $this->optionsResolver->setDefaults($options);
+        $this->options = $this->optionsResolver->resolve($options);
     }
 
-    public function getOption(string $option)
+    public function getOption(string $option): mixed
     {
-        return $this->options[$option];
+        return $this->options[$option] ?? null;
     }
 }

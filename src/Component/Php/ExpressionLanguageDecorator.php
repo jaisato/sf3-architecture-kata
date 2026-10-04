@@ -1,48 +1,40 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php;
+namespace App\Component\Php;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
- * @link http://symfony.com/doc/current/components/expression_language.html
+ * @see https://symfony.com/doc/7.4/components/expression_language.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class ExpressionLanguageDecorator
 {
-    /** @var ExpressionLanguage */
-    private $expressionLanguage;
+    public function __construct(private readonly ExpressionLanguage $expressionLanguage) {}
 
-    public function __construct(ExpressionLanguage $expressionLanguage)
+    /**
+     * The expression is evaluated without being compiled to PHP.
+     *
+     * @param array<string, mixed> $values
+     */
+    public function evaluate(string $expression, array $values = []): mixed
     {
-        $this->expressionLanguage = $expressionLanguage;
+        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * the expression is evaluated without being compiled to Php
+     * The expression is compiled to PHP, so it can be cached and evaluated.
      *
-     * @param string $expression
-     * @param array $values
-     * @return mixed
+     * @param list<string> $names
      */
-    public function evaluate(string $expression, array $values = [])
+    public function compile(string $expression, array $names = []): string
     {
         // TODO
-    }
-
-    /**
-     * the expression is compiled to Php, so it can be cached and evaluated
-     *
-     * @param string $expression
-     * @param array $names
-     * @return mixed
-     */
-    public function compile(string $expression, array $names = [])
-    {
-        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 }

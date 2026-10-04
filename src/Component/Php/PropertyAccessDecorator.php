@@ -1,88 +1,83 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php;
+namespace App\Component\Php;
+
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
- * @link http://symfony.com/doc/current/components/property_access.html
+ * @see https://symfony.com/doc/7.4/components/property_access.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class PropertyAccessDecorator
 {
-    /** @var \Symfony\Component\PropertyAccess\PropertyAccessor */
-    private $accessor;
+    private PropertyAccessorInterface $accessor;
 
     public function __construct()
     {
-    }
-
-    /**
-     * Read element from array
-     *
-     * @param array $array
-     * @param string $element
-     * @return mixed
-     */
-    public function readFromArray(array $array, string $element)
-    {
         // TODO
     }
 
     /**
-     * Read attribute from object
+     * Read element from array.
      *
-     * @param object $object
-     * @param string $attribute
-     * @return mixed
+     * @param array<mixed> $array
      */
-    public function readFromObject($object, string $attribute)
+    public function readFromArray(array $array, string $element): mixed
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Set element of attribute.
-     * @param array $array
-     * @param string $element
-     * @param $value
+     * Read attribute from object.
      */
-    public function writeToArray(array &$array, string $element, $value)
+    public function readFromObject(object $object, string $attribute): mixed
+    {
+        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+    }
+
+    /**
+     * Set element of array.
+     *
+     * @param array<mixed> $array
+     */
+    public function writeToArray(array &$array, string $element, mixed $value): void
     {
         // TODO
     }
 
     /**
      * Set attribute of object.
+     */
+    public function writeToObject(object $object, string $attribute, mixed $value): void
+    {
+        // TODO
+    }
+
+    /**
+     * Check if attribute/element is writable.
      *
-     * @param object $object
-     * @param string $attribute
-     * @param $value
+     * @param object|array<mixed> $item
      */
-    public function writeToObject(&$object, string $attribute, $value)
+    public function isWritable(object|array $item, string $attribute): bool
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Check if attribute/element is writable
-     * @param $item
-     * @param string $attribute
+     * Check if attribute/element is readable.
+     *
+     * @param object|array<mixed> $item
      */
-    public function isWritable($item, string $attribute)
+    public function isReadable(object|array $item, string $attribute): bool
     {
         // TODO
-    }
-
-    /**
-     * Check if attribute/element is readable
-     * @param $item
-     * @param string $attribute
-     */
-    public function isReadable($item, string $attribute)
-    {
-        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 }

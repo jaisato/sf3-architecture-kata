@@ -1,38 +1,39 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\DependencyInjection;
+namespace App\Tests\DependencyInjection;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\DependencyInjection
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class ServiceTest extends KernelTestCase
+final class ServiceTest extends KernelTestCase
 {
-    public function testGenericServiceIsLoaded()
+    public function testGenericServiceIsLoaded(): void
     {
-        static::bootKernel();
+        self::bootKernel();
 
-        $container = static::$kernel->getContainer();
-
-        static::assertTrue($container->has('acme.blog.topic_manager'), 'acme.blog.topic_manager must be loaded in container');
+        // Services are private by default. static::getContainer() is the test
+        // container, which also reaches the private services that survive the
+        // compilation: a private service nobody uses is removed from it.
+        static::assertTrue(
+            static::getContainer()->has('acme.blog.topic_manager'),
+            'acme.blog.topic_manager must be loaded in the container',
+        );
     }
 
-    public function testCustomExtensionIsCreated()
+    public function testCustomExtensionIsCreated(): void
     {
-        static::bootKernel();
+        $bundles = self::bootKernel()->getBundles();
 
-        $bundles = static::$kernel->getBundles();
-
-        static::assertTrue(array_key_exists('AcmeBlogBundle', $bundles), 'Bundle must be loaded');
+        static::assertArrayHasKey('AcmeBlogBundle', $bundles, 'Bundle must be loaded');
 
         $extension = $bundles['AcmeBlogBundle']->getContainerExtension();
 
         static::assertNotNull($extension, 'Extension must be created');
-        static::assertEquals('Acme\BlogBundle\DependencyInjection\CustomExtension', get_class($extension), 'Custom extension must be loaded');
+        static::assertSame('Acme\BlogBundle\DependencyInjection\CustomExtension', $extension::class, 'Custom extension must be loaded');
     }
 }

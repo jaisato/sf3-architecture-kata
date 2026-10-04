@@ -1,50 +1,49 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Php;
+namespace App\Tests\Php;
 
-use Component\Php\ExpressionLanguageDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Php\ExpressionLanguageDecorator;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class ExpressionLanguageTest extends KernelTestCase
+final class ExpressionLanguageTest extends TestCase
 {
-    /** @var ExpressionLanguageDecorator */
-    private $expressionLanguage;
+    private ExpressionLanguageDecorator $expressionLanguage;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->expressionLanguage = new ExpressionLanguageDecorator(new ExpressionLanguage());
     }
 
-    public function testEvaluation()
+    public function testEvaluation(): void
     {
         static::assertEquals(
             3,
             $this->expressionLanguage->evaluate('2 + 1'),
-            'You must to implement the expression language evaluate method'
+            'You must implement the expression language evaluate method',
         );
     }
 
-    public function testCompile()
+    public function testCompile(): void
     {
-        static::assertEquals(
-            '2 + 1',
+        // The compiler wraps every binary operation in parentheses.
+        static::assertSame(
+            '(2 + 1)',
             $this->expressionLanguage->compile('2 + 1'),
-            'You must to implement the expression language evaluate method'
+            'You must implement the expression language compile method',
         );
     }
 
-    public function testAnotherEvaluation()
+    public function testAnotherEvaluation(): void
     {
         $robot = new class {
-            public function sayHello()
+            public function sayHello(): string
             {
                 return 'hello';
             }
@@ -53,7 +52,7 @@ class ExpressionLanguageTest extends KernelTestCase
         static::assertEquals(
             'hello',
             $this->expressionLanguage->evaluate('robot.sayHello()', ['robot' => $robot]),
-            'You must to implement the expression language evaluate method'
+            'You must implement the expression language evaluate method',
         );
     }
 }
