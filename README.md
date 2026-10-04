@@ -106,9 +106,13 @@ que hazlo público o, mejor, úsalo (por ejemplo, desde el controlador).
 ## Calidad y CI
 
 ```bash
-composer check          # validate --strict, php-cs-fixer, PHPStan, lint y la suite smoke
+composer check          # lo que ejecuta el CI, en orden y con el PHP local
 composer cs:fix         # corrige el estilo
 ```
+
+`composer check` ejecuta `composer validate --strict`, `composer audit`,
+php-cs-fixer, PHPStan, los lints y la suite: `smoke` en `master` y la entera en
+`solucion`.
 
 El CI (`.github/workflows/ci.yml`) usa el workflow reutilizable
 [`symfony-ci`](https://github.com/jaisato/.github) de `jaisato/.github`:
