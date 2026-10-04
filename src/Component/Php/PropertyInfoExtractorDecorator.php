@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Component\Php;
 
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\TypeInfo\Type;
 
@@ -25,7 +27,16 @@ class PropertyInfoExtractorDecorator
 
     public function __construct()
     {
-        // TODO
+        $reflectionExtractor = new ReflectionExtractor();
+        $phpDocExtractor = new PhpDocExtractor();
+
+        $this->propertyInfoExtractor = new PropertyInfoExtractor(
+            listExtractors: [$reflectionExtractor],
+            typeExtractors: [$phpDocExtractor, $reflectionExtractor],
+            descriptionExtractors: [$phpDocExtractor],
+            accessExtractors: [$reflectionExtractor],
+            initializableExtractors: [$reflectionExtractor],
+        );
     }
 
     /**
@@ -35,8 +46,7 @@ class PropertyInfoExtractorDecorator
      */
     public function getShortDescriptionOfAProperty(string $class, string $property): ?string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->propertyInfoExtractor->getShortDescription($class, $property);
     }
 
     /**
@@ -46,8 +56,7 @@ class PropertyInfoExtractorDecorator
      */
     public function getLongDescriptionOfAProperty(string $class, string $property): ?string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->propertyInfoExtractor->getLongDescription($class, $property);
     }
 
     /**
@@ -59,8 +68,12 @@ class PropertyInfoExtractorDecorator
      */
     public function getPublicPropertiesFromClass(string $class): array
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        // ReflectionExtractor also lists the "properties" behind accessors and
+        // mutators (getName() gives "name"). Without prefixes, only the public
+        // properties are left.
+        $publicPropertiesOnly = new ReflectionExtractor(mutatorPrefixes: [], accessorPrefixes: [], arrayMutatorPrefixes: []);
+
+        return array_values($publicPropertiesOnly->getProperties($class) ?? []);
     }
 
     /**
@@ -70,8 +83,7 @@ class PropertyInfoExtractorDecorator
      */
     public function getPropertyInfoFromClass(string $class, string $property): ?Type
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->propertyInfoExtractor->getType($class, $property);
     }
 
     /**
@@ -81,8 +93,7 @@ class PropertyInfoExtractorDecorator
      */
     public function isPropertyReadable(string $class, string $property): bool
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return true === $this->propertyInfoExtractor->isReadable($class, $property);
     }
 
     /**
@@ -92,7 +103,6 @@ class PropertyInfoExtractorDecorator
      */
     public function isPropertyWritable(string $class, string $property): bool
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return true === $this->propertyInfoExtractor->isWritable($class, $property);
     }
 }

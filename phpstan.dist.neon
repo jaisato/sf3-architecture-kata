@@ -11,6 +11,7 @@ parameters:
     paths:
         - src
         - tests
+        - bundles
     tmpDir: var/cache/phpstan
     symfony:
         # Dumped by `bin/console cache:warmup --env=dev` (debug kernels write it).

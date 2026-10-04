@@ -26,7 +26,7 @@ class FilesystemDecorator
      */
     public function createDirectory(string $path): void
     {
-        // TODO
+        $this->filesystem->mkdir($path);
     }
 
     /**
@@ -34,6 +34,6 @@ class FilesystemDecorator
      */
     public function createAnEmptyFile(string $filePath): void
     {
-        // TODO
+        $this->filesystem->touch($filePath);
     }
 }

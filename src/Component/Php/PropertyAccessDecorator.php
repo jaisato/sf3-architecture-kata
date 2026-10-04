@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Component\Php;
 
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -18,7 +19,7 @@ class PropertyAccessDecorator
 
     public function __construct()
     {
-        // TODO
+        $this->accessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
@@ -28,8 +29,8 @@ class PropertyAccessDecorator
      */
     public function readFromArray(array $array, string $element): mixed
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        // An array index goes between brackets; "name" alone would be a property.
+        return $this->accessor->getValue($array, "[{$element}]");
     }
 
     /**
@@ -37,8 +38,7 @@ class PropertyAccessDecorator
      */
     public function readFromObject(object $object, string $attribute): mixed
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->accessor->getValue($object, $attribute);
     }
 
     /**
@@ -48,7 +48,7 @@ class PropertyAccessDecorator
      */
     public function writeToArray(array &$array, string $element, mixed $value): void
     {
-        // TODO
+        $this->accessor->setValue($array, "[{$element}]", $value);
     }
 
     /**
@@ -56,7 +56,7 @@ class PropertyAccessDecorator
      */
     public function writeToObject(object $object, string $attribute, mixed $value): void
     {
-        // TODO
+        $this->accessor->setValue($object, $attribute, $value);
     }
 
     /**
@@ -66,8 +66,7 @@ class PropertyAccessDecorator
      */
     public function isWritable(object|array $item, string $attribute): bool
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->accessor->isWritable($item, \is_array($item) ? "[{$attribute}]" : $attribute);
     }
 
     /**
@@ -77,7 +76,6 @@ class PropertyAccessDecorator
      */
     public function isReadable(object|array $item, string $attribute): bool
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->accessor->isReadable($item, \is_array($item) ? "[{$attribute}]" : $attribute);
     }
 }

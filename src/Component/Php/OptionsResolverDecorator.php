@@ -27,7 +27,11 @@ class OptionsResolverDecorator
 
     private function configureOptions(): void
     {
-        // TODO
+        $this->optionsResolver
+            ->setRequired(['host', 'company'])
+            ->setDefined('port')
+            ->setAllowedTypes('port', 'int')
+            ->setDefault('name', 'Jhon Snow');
     }
 
     /**

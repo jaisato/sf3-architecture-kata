@@ -23,8 +23,7 @@ class ExpressionLanguageDecorator
      */
     public function evaluate(string $expression, array $values = []): mixed
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->expressionLanguage->evaluate($expression, $values);
     }
 
     /**
@@ -34,7 +33,6 @@ class ExpressionLanguageDecorator
      */
     public function compile(string $expression, array $names = []): string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->expressionLanguage->compile($expression, $names);
     }
 }

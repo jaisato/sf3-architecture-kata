@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Component\Php;
 
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -23,7 +27,9 @@ class SerializerDecorator
 
     public function __construct()
     {
-        // TODO
+        // ObjectNormalizer reads through getters and public properties and
+        // writes through setters: that is what Car has to offer.
+        $this->serializer = new Serializer([new ObjectNormalizer()], [new JsonEncoder(), new XmlEncoder()]);
     }
 
     /**
@@ -31,8 +37,7 @@ class SerializerDecorator
      */
     public function serializeToJson(object $object): string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->serializer->serialize($object, 'json');
     }
 
     /**
@@ -40,8 +45,7 @@ class SerializerDecorator
      */
     public function serializeToXml(object $object): string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->serializer->serialize($object, 'xml');
     }
 
     /**
@@ -55,7 +59,12 @@ class SerializerDecorator
      */
     public function deserializeFromXml(string $class, string $xml): object
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        $object = $this->serializer->deserialize($xml, $class, 'xml');
+
+        if (!$object instanceof $class) {
+            throw new \UnexpectedValueException(\sprintf('Expected an instance of %s.', $class));
+        }
+
+        return $object;
     }
 }

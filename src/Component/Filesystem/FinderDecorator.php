@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Component\Filesystem;
 
+use Symfony\Component\Finder\Finder;
+
 /**
  * A Finder keeps every in() and filter it is given, so each search starts
  * from a new one: Symfony\Component\Finder\Finder::create().
@@ -22,8 +24,7 @@ class FinderDecorator
      */
     public function getFilesFromAPath(string $path): array
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->names(Finder::create()->files()->in($path)->depth(0));
     }
 
     /**
@@ -33,8 +34,7 @@ class FinderDecorator
      */
     public function getDirectoriesFromPath(string $path): array
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->names(Finder::create()->directories()->in($path)->depth(0));
     }
 
     /**
@@ -44,8 +44,7 @@ class FinderDecorator
      */
     public function getFilesWithIncludedText(string $path, string $text): array
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        return $this->names(Finder::create()->files()->in($path)->contains($text));
     }
 
     /**
@@ -53,7 +52,26 @@ class FinderDecorator
      */
     public function showContentsFromAFile(string $filePath): string
     {
-        // TODO
-        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+        $files = Finder::create()->files()->in(\dirname($filePath))->depth(0)->name(basename($filePath));
+
+        foreach ($files as $file) {
+            return $file->getContents();
+        }
+
+        throw new \RuntimeException(\sprintf('File "%s" not found.', $filePath));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function names(Finder $finder): array
+    {
+        $names = [];
+
+        foreach ($finder->sortByName() as $file) {
+            $names[] = $file->getFilename();
+        }
+
+        return $names;
     }
 }
