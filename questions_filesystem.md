@@ -1,26 +1,31 @@
-## Components 
+## Filesystem y Finder (Symfony 7.4)
 
-#### Filesystem
-**1) Using Finder. What do you do if you want to get a specific file with a specific content?** 
+**1) Con Finder, ¿cómo se buscan los ficheros que contienen un texto?**
+
 ```php
-a) It's not possible
-b) $finder->files()->contains('lorem ipsum')
-c) $finder->files()->with('lorem ipsum')
-d) Restrict files and iterate in order to get it.
+a) No se puede.
+b) $finder->files()->contains('lorem ipsum');
+c) $finder->files()->with('lorem ipsum');
+d) Hay que recorrer los ficheros y leer cada uno.
 ```
 
-**2) Using Finder. How do you get a Finder with ordered list of directories by name?
+**2) Con Finder, ¿cómo se obtienen los directorios ordenados por nombre?**
+
 ```php
-a) You cannot order directories
-b) $finder->directories($path)->orderBy('name')
-c) $finder->directories()->orderByFileName('name')
-d) $finder->directories()->orderByName()
+a) No se pueden ordenar.
+b) $finder->directories()->orderBy('name');
+c) $finder->directories()->sortByName();
+d) $finder->directories()->orderByName();
 ```
 
-3) Using Filesystem. How do you create a directory with permissions 777?
+**3) Con Filesystem, ¿cómo se crea un directorio con permisos 0777?**
+
 ```php
-a) $filesystem->create('/tmp/dir')->chmod(777);
-b) $filesystem->create('/tmp/dir', '0777');
-c) $filesystem->mkdir('/tmp/dir', 0700);
+a) $filesystem->create('/tmp/dir')->chmod(0777);
+b) $filesystem->mkdir('/tmp/dir', '0777');
+c) $filesystem->mkdir('/tmp/dir', 0777);
 d) $filesystem->createDirectory('/tmp/dir')->chmod(0777);
 ```
+
+Y una pregunta extra: con una `umask` de `022`, ¿qué permisos acaba teniendo
+el directorio de la respuesta correcta?

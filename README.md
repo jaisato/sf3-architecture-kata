@@ -1,56 +1,146 @@
-# KATA SYMFONY 3
+# Kata de arquitectura de Symfony
 
-The goal of this kata is work your knowledge about "Symfony architecture" of [Symfony certification](https://sensiolabs.com/en/symfony/certification.html)
+Una kata para practicar la parte de arquitectura del temario de la
+[certificación de Symfony](https://certification.symfony.com/): componentes,
+bundles, rutas y contenedor de servicios. Daniel Funes la escribió en 2017
+para la certificación de Symfony 3, y en 2026 se migró a **Symfony 7.4 LTS,
+PHP 8.4 y PHPUnit 12**, con los ejercicios adaptados a las APIs actuales.
 
-### Requirements
+Cada ejercicio es una suite de PHPUnit que **falla a propósito** hasta que lo
+resuelves. La rama [`solucion`](https://github.com/jaisato/sf3-architecture-kata/tree/solucion) los tiene resueltos;
+mírala cuando hayas terminado o si te atascas.
 
-**PHP >= 7.2.5 and < 8.0**, plus Git and composer.
+## Requisitos
 
-The locked dependency set (Symfony 3.4, `doctrine/doctrine-cache-bundle`) does
-not run on PHP 8. `composer.json` pins `config.platform.php` so the lock file
-resolves reproducibly — which also means Composer validates against that
-synthetic version rather than your interpreter, so a `composer install` on an
-unsupported PHP would otherwise succeed and only fail later.
-`bin/check-php-version.php` runs on the real interpreter before install/update
-and stops that. See `SECURITY.md`.
+- PHP 8.4 o superior, con la extensión `intl`.
+- Composer 2.
 
-The test suite runs on PHPUnit 8.5 (`php vendor/bin/phpunit`); the older
-`simple-phpunit` bootstrap no longer works, since it goes through Composer 1,
-whose Packagist support shut down in September 2025.
+```bash
+git clone https://github.com/jaisato/sf3-architecture-kata.git
+cd sf3-architecture-kata
+composer install
+composer test:smoke     # el kernel arranca y las rutas cargan: debe pasar ya
+composer exercise1      # y así hasta exercise5; `composer test` ejecuta todo
+```
 
-#### Exercise 1:
-**Implement:** Classes of namespace "Component\PHP"
-**Check:** php vendor/bin/phpunit --testsuite=exercise1
-**Test**: Answer the next [questions](questions_php.md)
+## Ejercicio 1: componentes de PHP
 
-#### Exercise 2:
-**Implement:** Classes of namespace "Component\Filesystem"
-**Check:** php vendor/bin/phpunit --testsuite=exercise2
-**Test**: Answer the next [questions](questions_filesystem.md)
+**Implementa** las clases de `App\Component\Php` (`src/Component/Php`). Los
+métodos que devuelven un valor lanzan una `LogicException` («TODO») hasta que
+los completas.
 
-#### Exercise 3:
-**Implement:**
-Add a reusable bundle to the kernel using best practices:
+| Clase | Componente | Pistas |
+|---|---|---|
+| `ExpressionLanguageDecorator` | ExpressionLanguage | `evaluate()` y `compile()`. El compilador pone paréntesis: `2 + 1` da `(2 + 1)`. |
+| `IntlDecorator` | Intl | `Currencies`, `Languages` y `Countries`. La clase `Intl` de Symfony 3 ya no ofrece estos datos. |
+| `OptionsResolverDecorator` | OptionsResolver | `host` y `company` obligatorias, `port` opcional y `name` con el valor por defecto `Jhon Snow`. |
+| `PropertyAccessDecorator` | PropertyAccess | `PropertyAccess::createPropertyAccessor()`. Los índices de un array van entre corchetes. |
+| `PropertyInfoExtractorDecorator` | PropertyInfo y TypeInfo | `getType()` devuelve un `Symfony\Component\TypeInfo\Type` (`getTypes()` está obsoleto). Las descripciones salen del PHPDoc. |
+| `SerializerDecorator` | Serializer | Prepara también `Serializer\Car`: el serializador tiene que poder leer sus propiedades privadas. |
 
-    - Our company name is Acme
-    - Bundle name is "Blog"
-    - Has a controller about "Topic"
-    - Has a command about "Topic"
-    - Has the next resource directories: public, translations, config.
-    
-**Check:** php vendor/bin/phpunit --testsuite=exercise3
+**Comprueba:** `composer exercise1`.
+**Cuestionario:** [preguntas de componentes de PHP](questions_php.md).
 
-#### Exercise 4:
-Create the next routes to your controller:
-    - POST /topics
-    - GET /topics
+## Ejercicio 2: Filesystem y Finder
 
-**Check:** php vendor/bin/phpunit --testsuite=exercise4    
+**Implementa** las clases de `App\Component\Filesystem`
+(`src/Component/Filesystem`). Un `Finder` acumula cada `in()` y cada filtro
+que recibe, así que cada búsqueda empieza con uno nuevo (`Finder::create()`).
 
-#### Exercise 5:
-**Implement:**
+**Comprueba:** `composer exercise2`.
+**Cuestionario:** [preguntas de Filesystem](questions_filesystem.md).
 
-    - Create a custom extension in your bundle named CustomExtension
-    - Create a service class "TopicManager" inside your bundle and add to the services (use CustomExtension to load)
+## Ejercicio 3: un bundle reutilizable
 
-**Check:** php vendor/bin/phpunit --testsuite=exercise5
+**Crea** un bundle siguiendo las
+[buenas prácticas de los bundles reutilizables](https://symfony.com/doc/7.4/bundles/best_practices.html):
+
+- La empresa es Acme y el bundle se llama Blog: `Acme\BlogBundle\AcmeBlogBundle`.
+- Usa la estructura moderna. El bundle vive en `bundles/AcmeBlogBundle/`, con
+  el código PHP en `src/` y los recursos en su raíz: `config/`, `public/` y
+  `translations/`. `getPath()` tiene que devolver esa raíz: `AbstractBundle`
+  ya lo hace, y si extiendes `Bundle` tendrás que sobrescribirlo.
+- Una extensión del contenedor: `Acme\BlogBundle\DependencyInjection\AcmeBlogExtension`.
+- Un controlador `Acme\BlogBundle\Controller\TopicController` que extienda
+  `AbstractController` (la antigua clase `Controller` ya no existe).
+- Un comando `Acme\BlogBundle\Command\TopicCommand`. Puede extender `Command`
+  o, desde Symfony 7.3, ser una clase invocable con `#[AsCommand]`.
+- Registra el namespace en el autoload de `composer.json`
+  (`"Acme\\BlogBundle\\": "bundles/AcmeBlogBundle/src/"`, y después
+  `composer dump-autoload`) y el bundle en `config/bundles.php`.
+
+**Comprueba:** `composer exercise3`.
+
+## Ejercicio 4: rutas
+
+**Crea** en `TopicController` estas rutas, que deben responder con un 2xx:
+
+- `GET /topics`
+- `POST /topics`
+
+Si el controlador es un servicio autoconfigurado con `#[Route]`,
+`config/routes.yaml` (`resource: routing.controllers`) importa sus rutas sin
+nada más. Un bundle también puede ofrecer su propio fichero de rutas para que
+la aplicación lo importe.
+
+**Comprueba:** `composer exercise4`.
+
+## Ejercicio 5: contenedor de servicios
+
+**Implementa:**
+
+- Una extensión propia, `Acme\BlogBundle\DependencyInjection\CustomExtension`,
+  que el bundle use en lugar de la que Symfony busca por convención.
+- Una clase de servicio `TopicManager` en el bundle, registrada con el id
+  `acme.blog.topic_manager` desde la configuración que carga `CustomExtension`.
+  Escribe esa configuración en PHP o en YAML: Symfony 7.4 marca el formato XML
+  como obsoleto.
+
+Los servicios son privados por defecto. El test usa `static::getContainer()`,
+el contenedor de test, que llega también a los servicios privados que
+sobreviven a la compilación. Un servicio privado que nadie usa se elimina, así
+que hazlo público o, mejor, úsalo (por ejemplo, desde el controlador).
+
+**Comprueba:** `composer exercise5`.
+
+## Calidad y CI
+
+```bash
+composer check          # validate --strict, php-cs-fixer, PHPStan, lint y la suite smoke
+composer cs:fix         # corrige el estilo
+```
+
+El CI (`.github/workflows/ci.yml`) usa el workflow reutilizable
+[`symfony-ci`](https://github.com/jaisato/.github) de `jaisato/.github`:
+`composer validate --strict`, `php -l` en PHP 8.4 y 8.5, php-cs-fixer, PHPStan
+(nivel max), los lints, la suite `smoke` y `composer audit`. Las suites de los
+ejercicios no corren en `master`, porque fallarían siempre. En la rama
+`solucion`, el mismo workflow ejecuta la suite entera. `audit.yml` repite la
+auditoría cada lunes y Dependabot propone las actualizaciones. Ver
+[`SECURITY.md`](SECURITY.md).
+
+## La arquitectura de Symfony, en 2026
+
+La kata venía con una presentación de 2017 (`presentation.pptx`, sobre
+Symfony 3). Ya no está en el repositorio: era un binario de 3,8 MB que no se
+podía revisar en un diff y hablaba de piezas que ya no existen. Sigue en el
+historial (`git show 65eb4ae:presentation.pptx > presentation.pptx`). Esto es
+lo que sigue vigente:
+
+- **HttpKernel dirigido por eventos.** `HttpKernel::handle()` despacha
+  `kernel.request` (seguridad y routing), resuelve el controlador
+  (`kernel.controller`) y sus argumentos (`kernel.controller_arguments`), lo
+  ejecuta, convierte lo que no sea una `Response` (`kernel.view`), deja
+  retocar la respuesta (`kernel.response`) y cierra con
+  `kernel.finish_request` y, ya enviada, `kernel.terminate`. Las excepciones
+  pasan por `kernel.exception`.
+- **EventDispatcher.** Patrón mediador, con listeners (hoy con
+  `#[AsEventListener]`) y subscribers (`EventSubscriberInterface`).
+- **Bundles y componentes.** Un bundle empaqueta una funcionalidad
+  reutilizable; los componentes se usan también fuera del framework.
+
+Lo que ya no existe: la Standard Edition y el `AppBundle` (desde Symfony 4,
+Flex y `symfony/skeleton`), el componente ClassLoader (eliminado en 4.0),
+`ContainerAwareEventDispatcher` (4.0), el componente Templating (5.0) y el
+`ParamConverter` de SensioFrameworkExtraBundle, abandonado y sustituido por
+los value resolvers de los argumentos de los controladores.
