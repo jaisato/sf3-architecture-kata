@@ -21,9 +21,13 @@ final class RoutingTest extends WebTestCase
 
         $client->request('GET', '/topics');
 
-        static::assertResponseIsSuccessful(verbose: false);
+        static::assertResponseStatusCodeSame(200, verbose: false);
     }
 
+    /**
+     * Any 2xx: a POST that creates a topic may answer 201 Created. The 2017
+     * kata asked for exactly 200 here too.
+     */
     public function testPostRoute(): void
     {
         $client = static::createClient();

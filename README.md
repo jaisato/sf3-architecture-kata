@@ -73,10 +73,10 @@ que recibe, así que cada búsqueda empieza con uno nuevo (`Finder::create()`).
 
 ## Ejercicio 4: rutas
 
-**Crea** en `TopicController` estas rutas, que deben responder con un 2xx:
+**Crea** en `TopicController` estas rutas:
 
-- `GET /topics`
-- `POST /topics`
+- `GET /topics`, que debe responder 200.
+- `POST /topics`, que debe responder con un 2xx: 200, o 201 si crea el tema.
 
 Si el controlador es un servicio autoconfigurado con `#[Route]`,
 `config/routes.yaml` (`resource: routing.controllers`) importa sus rutas sin
