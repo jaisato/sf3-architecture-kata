@@ -1,43 +1,34 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Php\Serializer;
+namespace App\Component\Php\Serializer;
 
 /**
- * http://symfony.com/doc/current/components/serializer.html
+ * @see https://symfony.com/doc/7.4/components/serializer.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php\Serializer
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class Car
 {
-    public $name;
+    public ?string $name = null;
 
-    private $year;
+    private ?string $year = null;
 
-    private $price;
+    private ?string $price = null;
 
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @param mixed $year
-     */
-    public function setYear($year)
+    public function setYear(?string $year): void
     {
         $this->year = $year;
     }
 
-    /**
-     * @param mixed $price
-     */
-    public function setPrice($price)
+    public function setPrice(?string $price): void
     {
         $this->price = $price;
     }

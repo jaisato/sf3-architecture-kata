@@ -1,30 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Php;
+namespace App\Tests\Php;
 
-use Component\Php\SerializerDecorator;
-use Component\Php\Serializer\Car;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Php\Serializer\Car;
+use App\Component\Php\SerializerDecorator;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @link http://symfony.com/doc/current/components/serializer.html
+ * @see https://symfony.com/doc/7.4/components/serializer.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class SerializerTest extends KernelTestCase
+final class SerializerTest extends TestCase
 {
-    /** @var  SerializerDecorator */
-    private $serializerDecorator;
+    private SerializerDecorator $serializerDecorator;
 
     protected function setUp(): void
     {
         $this->serializerDecorator = new SerializerDecorator();
     }
 
-    public function testDeserializeAXml()
+    public function testDeserializeAXml(): void
     {
         $xml = '<?xml version="1.0"?>
             <response>
@@ -35,51 +34,22 @@ class SerializerTest extends KernelTestCase
 
         $car = $this->serializerDecorator->deserializeFromXml(Car::class, $xml);
 
-        static::assertAttributeEquals(
-            'TroncoMovil',
-            'name',
-            $car,
-            'you must to implemente deserializeFromXml'
-        );
-
-        static::assertAttributeEquals(
-            '1200 AC',
-            'year',
-            $car,
-            'you must to implemente deserializeFromXml'
-        );
-
-        static::assertAttributeEquals(
-            '12500 stones',
-            'price',
-            $car,
-            'you must to implemente deserializeFromXml'
-        );
+        // assertAttributeEquals() is gone since PHPUnit 9; assertEquals()
+        // compares objects property by property, private ones included.
+        static::assertEquals(self::car(), $car, 'You must implement deserializeFromXml');
     }
 
-    public function testSerializeACarToJson()
+    public function testSerializeACarToJson(): void
     {
-        $car = new Car();
-
-        $car->setName('TroncoMovil');
-        $car->setPrice('12500 stones');
-        $car->setYear('1200 AC');
-
         self::assertJsonStringEqualsJsonString(
             '{"name":"TroncoMovil","year":"1200 AC","price":"12500 stones"}',
-            $this->serializerDecorator->serializeToJson($car),
-            'You must to implement json serializer and Car class'
+            $this->serializerDecorator->serializeToJson(self::car()),
+            'You must implement the JSON serializer and the Car class',
         );
     }
 
-    public function testSerializeACarToXml()
+    public function testSerializeACarToXml(): void
     {
-        $car = new Car();
-
-        $car->setName('TroncoMovil');
-        $car->setPrice('12500 stones');
-        $car->setYear('1200 AC');
-
         self::assertXmlStringEqualsXmlString(
             '<?xml version="1.0"?>
                         <response>
@@ -87,8 +57,18 @@ class SerializerTest extends KernelTestCase
                             <year>1200 AC</year>
                             <price>12500 stones</price>
                         </response>',
-            $this->serializerDecorator->serializeToXml($car),
-            'You must to implement json serializer and Car class'
+            $this->serializerDecorator->serializeToXml(self::car()),
+            'You must implement the XML serializer and the Car class',
         );
+    }
+
+    private static function car(): Car
+    {
+        $car = new Car();
+        $car->setName('TroncoMovil');
+        $car->setYear('1200 AC');
+        $car->setPrice('12500 stones');
+
+        return $car;
     }
 }

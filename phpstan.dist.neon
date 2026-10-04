@@ -1,0 +1,33 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+    level: max
+    # The oldest PHP composer.json accepts, not the one this machine happens to run.
+    phpVersion: 80400
+    paths:
+        - src
+        - tests
+    tmpDir: var/cache/phpstan
+    symfony:
+        # Dumped by `bin/console cache:warmup --env=dev` (debug kernels write it).
+        # The extension refuses to run without it, which is why `composer stan`
+        # warms the cache first.
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        # By default has() answers from that container, so on master, where
+        # exercise 5 is unsolved, ServiceTest's has('acme.blog.topic_manager')
+        # would be "always false". The kata asks exactly that question.
+        constantHassers: false
+    ignoreErrors:
+        # The exercise skeletons declare the property each solution needs and
+        # leave it to the student to use it: until then it is unused or only
+        # written. Solved, the error disappears, hence reportUnmatched: false.
+        -
+            identifiers:
+                - property.unused
+                - property.onlyWritten
+            path: src/Component/*
+            reportUnmatched: false

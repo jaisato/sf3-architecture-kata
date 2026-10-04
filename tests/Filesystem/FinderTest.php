@@ -1,62 +1,60 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Filesystem;
+namespace App\Tests\Filesystem;
 
-use Component\Filesystem\FinderDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Filesystem\FinderDecorator;
+use PHPUnit\Framework\TestCase;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Filesystem
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class FinderTest extends KernelTestCase
+final class FinderTest extends TestCase
 {
-    /** @var  FinderDecorator */
-    private $finder;
+    private FinderDecorator $finder;
 
     protected function setUp(): void
     {
         $this->finder = new FinderDecorator();
     }
 
-    public function testGettingFilesFromPath()
+    public function testGettingFilesFromPath(): void
     {
-        self::assertEquals(
+        self::assertSame(
             ['aFile.txt'],
             $this->finder->getFilesFromAPath(__DIR__ . '/files'),
-            'You must to implement getFilesFromAPath method'
+            'You must implement getFilesFromAPath method',
         );
     }
 
-    public function testGettingDirectoriesFromPath()
+    public function testGettingDirectoriesFromPath(): void
     {
-        self::assertEquals(
+        self::assertSame(
             ['text'],
             $this->finder->getDirectoriesFromPath(__DIR__ . '/files'),
-            'You must to implement getDirectoriesFromPath method'
+            'You must implement getDirectoriesFromPath method',
         );
     }
 
-    public function testSearchOfAText()
+    public function testSearchOfAText(): void
     {
-        self::assertEquals(
+        self::assertSame(
             ['something.txt'],
             $this->finder->getFilesWithIncludedText(__DIR__ . '/files/text', 'hello'),
-            'You must to implement getFilesWithIncludedText method'
+            'You must implement getFilesWithIncludedText method',
         );
     }
 
-    public function testGettingContentFromFile()
+    public function testGettingContentFromFile(): void
     {
         $file = __DIR__ . '/files/aFile.txt';
 
-        $content = $this->finder->showContentsFromAFile($file);
-
         self::assertStringEqualsFile(
-            $file, $content, 'you must to implement showContentsFromAFile method'
+            $file,
+            $this->finder->showContentsFromAFile($file),
+            'You must implement showContentsFromAFile method',
         );
     }
 }

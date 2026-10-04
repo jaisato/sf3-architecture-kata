@@ -1,64 +1,59 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Component\Filesystem;
-
-use Symfony\Component\Finder\Finder;
+namespace App\Component\Filesystem;
 
 /**
- * @link http://symfony.com/doc/current/components/finder.html
+ * A Finder keeps every in() and filter it is given, so each search starts
+ * from a new one: Symfony\Component\Finder\Finder::create().
+ *
+ * @see https://symfony.com/doc/7.4/components/finder.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Component\Filesystem
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
 class FinderDecorator
 {
-    private $finder;
-
-    public function __construct()
-    {
-        $this->finder = new Finder();
-    }
-
     /**
-     * @param string $path
-     * @return array
-     */
-    public function getFilesFromAPath(string $path)
-    {
-        // TODO
-    }
-
-    /**
-     * @param string $path
-     * @return array
-     */
-    public function getDirectoriesFromPath(string $path)
-    {
-        // TODO
-    }
-
-    /**
-     * @param string $path
-     * @param string $text
+     * Names of the files directly inside a directory.
      *
-     * @return array
+     * @return list<string>
      */
-    public function getFilesWithIncludedText(string $path, string $text)
+    public function getFilesFromAPath(string $path): array
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 
     /**
-     * Returns the content of a file
+     * Names of the directories directly inside a directory.
      *
-     * @param string $filePath
-     *
-     * @return string
+     * @return list<string>
      */
-    public function showContentsFromAFile(string $filePath)
+    public function getDirectoriesFromPath(string $path): array
     {
         // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+    }
+
+    /**
+     * Names of the files inside a directory that contain a text.
+     *
+     * @return list<string>
+     */
+    public function getFilesWithIncludedText(string $path, string $text): array
+    {
+        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
+    }
+
+    /**
+     * Returns the content of a file.
+     */
+    public function showContentsFromAFile(string $filePath): string
+    {
+        // TODO
+        throw new \LogicException('TODO: implement ' . __METHOD__ . '()');
     }
 }

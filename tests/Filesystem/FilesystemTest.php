@@ -1,26 +1,24 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Filesystem;
+namespace App\Tests\Filesystem;
 
-use Component\Filesystem\FilesystemDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Filesystem\FilesystemDecorator;
+use PHPUnit\Framework\TestCase;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Filesystem
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class FilesystemTest extends KernelTestCase
+final class FilesystemTest extends TestCase
 {
-    /** @var  FilesystemDecorator */
-    private $fileSystem;
+    private FilesystemDecorator $fileSystem;
 
-    /** @var string[] Paths created by a test, removed after it. */
-    private $created = [];
+    /** @var list<string> Paths created by a test, removed after it. */
+    private array $created = [];
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->fileSystem = new FilesystemDecorator();
     }
@@ -37,21 +35,21 @@ class FilesystemTest extends KernelTestCase
         $this->created = [];
     }
 
-    public function testCreatingDirectories()
+    public function testCreatingDirectories(): void
     {
         $directoryName = $this->created[] = sys_get_temp_dir() . '/' . uniqid('sf-kata-', true);
 
         $this->fileSystem->createDirectory($directoryName);
 
-        self::assertDirectoryExists($directoryName, 'You must to implement createDirectory method');
+        self::assertDirectoryExists($directoryName, 'You must implement createDirectory method');
     }
 
-    public function testCreatingFiles()
+    public function testCreatingFiles(): void
     {
         $file = $this->created[] = sys_get_temp_dir() . '/' . uniqid('sf-kata-', true) . '.txt';
 
         $this->fileSystem->createAnEmptyFile($file);
 
-        self::assertFileExists($file, 'You must to implement createAnEmptyFile method');
+        self::assertFileExists($file, 'You must implement createAnEmptyFile method');
     }
 }

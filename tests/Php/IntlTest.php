@@ -1,44 +1,44 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Php;
+namespace App\Tests\Php;
 
-use Component\Php\IntlDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Php\IntlDecorator;
+use PHPUnit\Framework\TestCase;
 
 /**
+ * The names come in English because phpunit.dist.xml sets intl.default_locale.
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class IntlTest extends KernelTestCase
+final class IntlTest extends TestCase
 {
-    /** @var IntlDecorator */
-    private $intl;
+    private IntlDecorator $intl;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->intl= new IntlDecorator();
+        $this->intl = new IntlDecorator();
     }
 
-    public function testGetCurrencyName()
+    public function testGetCurrencyName(): void
     {
-        static::assertEquals('Euro', $this->intl->getCurrencyName('EUR'));
+        static::assertSame('Euro', $this->intl->getCurrencyName('EUR'));
     }
 
-    public function testGetCurrency()
+    public function testGetCurrency(): void
     {
-        static::assertEquals('€', $this->intl->getCurrencySymbol('EUR'));
+        static::assertSame('€', $this->intl->getCurrencySymbol('EUR'));
     }
 
-    public function testGetLocaleName()
+    public function testGetLocaleName(): void
     {
-        static::assertEquals('Spanish', $this->intl->getLocaleName('es'));
+        static::assertSame('Spanish', $this->intl->getLocaleName('es'));
     }
 
-    public function testGetCountryName()
+    public function testGetCountryName(): void
     {
-        static::assertEquals('Spain', $this->intl->getCountryName('ES'));
+        static::assertSame('Spain', $this->intl->getCountryName('ES'));
     }
 }

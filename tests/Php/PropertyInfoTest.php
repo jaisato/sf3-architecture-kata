@@ -1,115 +1,101 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Php;
+namespace App\Tests\Php;
 
-use Component\Php\PropertyInfoExtractorDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Php\PropertyInfoExtractorDecorator;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class PropertyInfoTest extends KernelTestCase
+final class PropertyInfoTest extends TestCase
 {
     /**
      * Property info extractor
      *
      * something: other
-     *
-     * @var PropertyInfoExtractorDecorator
      */
-    private $propertyInfo;
+    private PropertyInfoExtractorDecorator $propertyInfo;
 
-    public $something;
+    public ?string $something = null;
 
     protected function setUp(): void
     {
         $this->propertyInfo = new PropertyInfoExtractorDecorator();
     }
 
-    public function testGetPublicProperties()
+    public function testGetPublicProperties(): void
     {
-        $properties = $this->propertyInfo->getPublicPropertiesFromClass(PropertyInfoExtractorDecorator::class);
-
-        static::assertEquals(
+        static::assertSame(
             [],
-            $properties,
-            'You must to implement getPropertiesFromClass'
+            $this->propertyInfo->getPublicPropertiesFromClass(PropertyInfoExtractorDecorator::class),
+            'You must implement getPublicPropertiesFromClass',
+        );
+
+        static::assertSame(
+            ['something'],
+            $this->propertyInfo->getPublicPropertiesFromClass(self::class),
+            'You must implement getPublicPropertiesFromClass',
         );
     }
 
-    public function testGetInformationAboutProperty()
+    public function testGetInformationAboutProperty(): void
     {
-        $information = $this->propertyInfo->getPropertyInfoFromClass(PropertyInfoExtractorDecorator::class, 'propertyInfoExtractor');
+        $type = $this->propertyInfo->getPropertyInfoFromClass(PropertyInfoExtractorDecorator::class, 'propertyInfoExtractor');
 
-        static::assertEquals(
-            PropertyInfoExtractor::class,
-            $information[0]->getClassName(),
-            'You must to implement getPropertyInfoFromClass'
-        );
-
-        static::assertEquals(
-            false,
-            $information[0]->isNullable(),
-            'You must to implement getPropertyInfoFromClass'
-        );
-
-        static::assertEquals(
-            false,
-            $information[0]->isCollection(),
-            'You must to implement getPropertyInfoFromClass'
-        );
+        // An object type: neither a builtin nor a collection (CollectionType
+        // wraps a generic array or iterable type).
+        static::assertInstanceOf(ObjectType::class, $type, 'You must implement getPropertyInfoFromClass');
+        static::assertSame(PropertyInfoExtractor::class, $type->getClassName(), 'You must implement getPropertyInfoFromClass');
+        static::assertFalse($type->isNullable(), 'You must implement getPropertyInfoFromClass');
     }
 
-    public function testGettingShortDescriptionClass()
+    public function testGettingShortDescriptionClass(): void
     {
-        $description = $this->propertyInfo->getShortDescriptionOfAProperty(static::class, 'propertyInfo');
-
-        static::assertEquals(
+        static::assertSame(
             'Property info extractor',
-            $description,
-            'You must to implement getShortDescriptionOfAProperty'
+            $this->propertyInfo->getShortDescriptionOfAProperty(self::class, 'propertyInfo'),
+            'You must implement getShortDescriptionOfAProperty',
         );
     }
 
-    public function testGettingLongDescriptionClass()
+    public function testGettingLongDescriptionClass(): void
     {
-        $description = $this->propertyInfo->getLongDescriptionOfAProperty(static::class, 'propertyInfo');
-
-        static::assertEquals(
+        static::assertSame(
             'something: other',
-            $description,
-            'You must to implement getLongDescriptionOfAProperty'
+            $this->propertyInfo->getLongDescriptionOfAProperty(self::class, 'propertyInfo'),
+            'You must implement getLongDescriptionOfAProperty',
         );
     }
 
-    public function testCheckingIfPropertyIsReadable()
+    public function testCheckingIfPropertyIsReadable(): void
     {
         static::assertFalse(
-            $this->propertyInfo->isPropertyReadable(static::class, 'propertyInfo'),
-            'You must to implement isPropertyReadable'
+            $this->propertyInfo->isPropertyReadable(self::class, 'propertyInfo'),
+            'You must implement isPropertyReadable',
         );
 
         static::assertTrue(
-            $this->propertyInfo->isPropertyReadable(static::class, 'something'),
-            'You must to implement isPropertyReadable'
+            $this->propertyInfo->isPropertyReadable(self::class, 'something'),
+            'You must implement isPropertyReadable',
         );
     }
 
-    public function testCheckingIfPropertyIsWritable()
+    public function testCheckingIfPropertyIsWritable(): void
     {
         static::assertFalse(
-            $this->propertyInfo->isPropertyWritable(static::class, 'propertyInfo'),
-            'You must to implement isPropertyWritable'
+            $this->propertyInfo->isPropertyWritable(self::class, 'propertyInfo'),
+            'You must implement isPropertyWritable',
         );
 
         static::assertTrue(
-            $this->propertyInfo->isPropertyWritable(static::class, 'something'),
-            'You must to implement isPropertyWritable'
+            $this->propertyInfo->isPropertyWritable(self::class, 'something'),
+            'You must implement isPropertyWritable',
         );
     }
 }

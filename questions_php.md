@@ -1,72 +1,88 @@
-## Components 
+## Componentes de PHP (Symfony 7.4)
 
-#### PHP
-**1) Using OptionsResolver. What is the result the next code?** 
-```php
-echo $resolver->evaluate("'fruit.apple', ['fruit' => 'apple']);
-```
-a) fruit
-b) ['fruit' => 'apple']
-c) apple
-d) Unable to get a property on a non-object
-    
-**2) Using OptionsResolver. What is the result the next code?** 
-```php
-var_dump($resolver->compile("[1 + 3]"));
-```
-a) string(7) "[1 + 3]"
-b) string(1) "4"
-c) int 4
-d) string(19) "array(0 => (1 + 3))"
+**1) Con ExpressionLanguage, ¿qué hace este código?**
 
-**3) What is the correct answer about Intl component?**
-        a) Replaces native C intl library
-        b) It's an abstraction of intl library and you have to install it in order to use for spanish language
-        c) All previous
- 
- **4) How can you access to a object's private attribute named "price" with a public method 'getPrice()' by PropertyAccess component?**
 ```php
-    a) $accessor->getValue($object, 'object[0].price')
-    b) $accessor->getValue($object, 'object.price')
-    c) $accessor->getValue($object, 'price')
-    d) $accessor->getValue($object, 'get_price')
+$expressionLanguage->evaluate('fruit.apple', ['fruit' => 'apple']);
 ```
 
-5) What does prints the next code using the PropertyInfo component:
-```php
-	$car = new class {
-	    private $name;
-	    private $lastName;
-	    public $address;
-	}
-```
-a) array(name, lastName, address)
-a) array(name => null, lastName => null, address => 'catalonia')
-a) array(address)
-a) array(address => 'catalonia')
+a) Devuelve `'fruit'`.
+b) Devuelve `['fruit' => 'apple']`.
+c) Devuelve `'apple'`.
+d) Lanza una excepción: no se puede leer una propiedad de algo que no es un objeto.
 
-**6) What affirmation is true about Serializer component?**
+**2) Con ExpressionLanguage, ¿qué imprime este código?**
+
 ```php
-class Person {
-	private $name;
-	private $lastName;
-	public $address;
-	public setAddress($address) {
-	    $this->address = $address;
-	}
+var_dump($expressionLanguage->compile('[1 + 3]'));
+```
+
+a) `string(7) "[1 + 3]"`
+b) `string(1) "4"`
+c) `int(4)`
+d) `string(14) "[0 => (1 + 3)]"`
+
+**3) ¿Qué afirmación sobre el componente Intl es correcta?**
+
+a) Sustituye a la extensión `intl` de PHP.
+b) Da acceso a los datos de ICU (nombres de idiomas, países, monedas, zonas horarias…) con clases como `Currencies`, `Languages` o `Countries`.
+c) Solo devuelve nombres en inglés.
+d) Hay que instalar un paquete distinto para cada idioma.
+
+**4) Con PropertyAccess, ¿cómo se lee la propiedad privada `price` de un objeto que tiene un método público `getPrice()`?**
+
+```php
+a) $accessor->getValue($object, 'object[0].price');
+b) $accessor->getValue($object, 'object.price');
+c) $accessor->getValue($object, 'price');
+d) $accessor->getValue($object, 'getPrice()');
+```
+
+**5) Con PropertyInfo y un `ReflectionExtractor` sin configurar, ¿qué devuelve `getProperties()` para esta clase?**
+
+```php
+class Car
+{
+    private $name;
+    private $lastName;
+    public $address;
 }
 
-$data = <<<EOF
+$reflectionExtractor->getProperties(Car::class);
+```
+
+a) `['name', 'lastName', 'address']`
+b) `['name' => null, 'lastName' => null, 'address' => null]`
+c) `['address']`
+d) `null`
+
+**6) Con un Serializer con `ObjectNormalizer` y `XmlEncoder`, ¿qué propiedades de `$person` quedan con valor?**
+
+```php
+class Person
+{
+    private $name;
+    private $lastName;
+    public $address;
+
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+}
+
+$data = <<<XML
 <person>
     <name>foo</name>
     <age>99</age>
-    <sportsman>false</sportsman>
+    <address>Catalonia</address>
 </person>
-EOF;
+XML;
 
 $person = $serializer->deserialize($data, Person::class, 'xml');
 ```
-a) All attributes are setted
-b) Only public attributes are setted
-c) All public attributes and attributes with public method are setted
-d) None of above
+
+a) `name`, `lastName` y `address`.
+b) Solo `address`.
+c) `name` y `address`.
+d) Ninguna: lanza una excepción por el atributo desconocido `age`.

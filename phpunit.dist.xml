@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- https://docs.phpunit.de/en/12.5/configuration.html
+
+     Without &#45;-testsuite every suite runs. On master the five exercise suites
+     fail on purpose until they are solved, which is why CI runs only "smoke". -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnDeprecation="true"
+         failOnNotice="true"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+>
+    <php>
+        <ini name="display_errors" value="1"/>
+        <ini name="error_reporting" value="-1"/>
+        <!-- Exercise 1 expects the Intl names in English, whatever the machine's locale. -->
+        <ini name="intl.default_locale" value="en"/>
+        <server name="APP_ENV" value="test" force="true"/>
+        <server name="SHELL_VERBOSITY" value="-1"/>
+        <server name="KERNEL_CLASS" value="App\Kernel"/>
+    </php>
+
+    <testsuites>
+        <testsuite name="smoke">
+            <directory>tests/Smoke</directory>
+        </testsuite>
+        <testsuite name="exercise1">
+            <directory>tests/Php</directory>
+        </testsuite>
+        <testsuite name="exercise2">
+            <directory>tests/Filesystem</directory>
+        </testsuite>
+        <testsuite name="exercise3">
+            <directory>tests/Bundle</directory>
+        </testsuite>
+        <testsuite name="exercise4">
+            <directory>tests/Routing</directory>
+        </testsuite>
+        <testsuite name="exercise5">
+            <directory>tests/DependencyInjection</directory>
+        </testsuite>
+    </testsuites>
+
+    <source ignoreSuppressionOfDeprecations="true"
+            ignoreIndirectDeprecations="true"
+            restrictNotices="true"
+            restrictWarnings="true"
+    >
+        <include>
+            <directory>src</directory>
+        </include>
+
+        <deprecationTrigger>
+            <function>trigger_deprecation</function>
+        </deprecationTrigger>
+    </source>
+</phpunit>

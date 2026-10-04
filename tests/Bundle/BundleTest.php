@@ -1,71 +1,91 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Bundle;
+namespace App\Tests\Bundle;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * Reused bundles should follow the official SF best practices.
+ * Reusable bundles should follow the official Symfony best practices.
  *
- * @link http://symfony.com/doc/current/bundles/best_practices.html
+ * @see https://symfony.com/doc/7.4/bundles/best_practices.html
  *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Bundle
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class BundleTest extends KernelTestCase
+final class BundleTest extends KernelTestCase
 {
-    public function classProvider(): array
+    /**
+     * @return iterable<string, array{string, class-string, string}>
+     */
+    public static function classProvider(): iterable
     {
-        return [
-            ['Acme\BlogBundle\AcmeBlogBundle', Bundle::class, 'Missing BlogBundle: This is the class that transforms a plain directory into a Symfony bundle'],
-            ['Acme\BlogBundle\DependencyInjection\AcmeBlogExtension', Extension::class, 'Missing Service Container Extension class'],
-            ['Acme\BlogBundle\Command\TopicCommand', Command::class, 'Missing TopicCommand class'],
-            ['Acme\BlogBundle\Controller\TopicController', Controller::class, 'Missing Topic Controller class'],
-        ];
+        // AbstractBundle extends Bundle, so either base class passes.
+        yield 'bundle' => ['Acme\BlogBundle\AcmeBlogBundle', Bundle::class, 'Missing AcmeBlogBundle: the class that turns a directory into a Symfony bundle'];
+        yield 'extension' => ['Acme\BlogBundle\DependencyInjection\AcmeBlogExtension', Extension::class, 'Missing the service container extension class'];
+        yield 'command' => ['Acme\BlogBundle\Command\TopicCommand', Command::class, 'Missing the TopicCommand class'];
+        yield 'controller' => ['Acme\BlogBundle\Controller\TopicController', AbstractController::class, 'Missing the TopicController class'];
     }
 
     /**
      * Create a reusable bundle.
-     *
-     * @dataProvider classProvider
-     *
-     * @param string $class
-     * @param string $parentClass
-     * @param string $message
      */
-    public function testInstances(string $class, string $parentClass, string $message)
+    #[DataProvider('classProvider')]
+    public function testInstances(string $class, string $parentClass, string $message): void
     {
         static::assertTrue(class_exists($class), $message);
-        static::assertTrue(is_subclass_of($class, $parentClass), "{$class} must inherit from {$parentClass}");
+        static::assertTrue(
+            is_subclass_of($class, $parentClass) || (Command::class === $parentClass && self::isInvokableCommand($class)),
+            "{$class} must extend {$parentClass}",
+        );
     }
 
     /**
-     * Add resources directories.
+     * Resource directories, in the modern bundle structure: the PHP classes in
+     * src/ and the resources at the root of the bundle, which is what
+     * getPath() must return.
      */
-    public function testResourcesDirectoriesAreCreated()
+    public function testResourcesDirectoriesAreCreated(): void
     {
-        static::assertTrue(is_dir(__DIR__ . '/../../src/Acme/BlogBundle/Resources'), 'You must to create the Resources directory');
-        static::assertTrue(is_dir(__DIR__ . '/../../src/Acme/BlogBundle/Resources/config'), 'You must to create the config directory');
-        static::assertTrue(is_dir(__DIR__ . '/../../src/Acme/BlogBundle/Resources/public'), 'You must to create the public directory');
-        static::assertTrue(is_dir(__DIR__ . '/../../src/Acme/BlogBundle/Resources/translations'), 'You must to create the translations directory');
+        $bundle = self::bootKernel()->getBundles()['AcmeBlogBundle'] ?? null;
+
+        static::assertNotNull($bundle, 'Register AcmeBlogBundle in config/bundles.php first');
+
+        $path = $bundle->getPath();
+
+        static::assertDirectoryExists($path . '/src', 'The PHP classes of the bundle go in its src/ directory');
+        static::assertDirectoryExists($path . '/config', 'You must create the config directory');
+        static::assertDirectoryExists($path . '/public', 'You must create the public directory');
+        static::assertDirectoryExists($path . '/translations', 'You must create the translations directory');
     }
 
     /**
      * Add bundle to kernel.
      */
-    public function testBundleIsAdded()
+    public function testBundleIsAdded(): void
     {
-        static::bootKernel();
+        $bundles = self::bootKernel()->getBundles();
 
-        $bundles = static::$kernel->getBundles();
+        static::assertArrayHasKey('AcmeBlogBundle', $bundles, 'Register AcmeBlogBundle in config/bundles.php');
+        static::assertSame('Acme\BlogBundle\AcmeBlogBundle', $bundles['AcmeBlogBundle']::class);
+    }
 
-        static::assertTrue(array_key_exists('AcmeBlogBundle', $bundles));
-        static::assertInstanceOf('Acme\BlogBundle\AcmeBlogBundle', $bundles['AcmeBlogBundle']);
+    /**
+     * Since Symfony 7.3 a command may also be an invokable class instead of a
+     * subclass of Command: the #[AsCommand] attribute and an __invoke() method.
+     *
+     * @param class-string $class
+     */
+    private static function isInvokableCommand(string $class): bool
+    {
+        return [] !== (new \ReflectionClass($class))->getAttributes(AsCommand::class)
+            && method_exists($class, '__invoke');
     }
 }

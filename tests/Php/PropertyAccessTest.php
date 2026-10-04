@@ -1,100 +1,85 @@
 <?php
+
 declare(strict_types=1);
 
-namespace Tests\Php;
+namespace App\Tests\Php;
 
-use Component\Php\PropertyAccessDecorator;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Component\Php\PropertyAccessDecorator;
+use App\Tests\Php\Fixtures\Person;
+use PHPUnit\Framework\TestCase;
 
 /**
- *
  * @author      Daniel Funes <dfunes@intercomempresas.com>
- * @package     Tests\Php
  * @copyright   2006-2017 Verticales Intercom, S.L.
  */
-class PropertyAccessTest extends KernelTestCase
+final class PropertyAccessTest extends TestCase
 {
-    /** @var object */
-    private $object;
+    private Person $object;
 
-    /** @var array */
-    private $array;
+    /** @var array<mixed> */
+    private array $array;
 
-    /** @var PropertyAccessDecorator */
-    private $propertyAccess;
+    private PropertyAccessDecorator $propertyAccess;
 
     protected function setUp(): void
     {
         $this->array = ['name' => 'Gile'];
-        $this->object = new class {
-            public $name = 'Gile';
-            private $address = 'Les Rambles 1';
-
-            public function getAddress()
-            {
-                return $this->address;
-            }
-
-            public function setAddress(string $address)
-            {
-                $this->address = $address;
-            }
-        };
-
+        $this->object = new Person();
 
         $this->propertyAccess = new PropertyAccessDecorator();
     }
 
-    public function testReadingFromArray()
+    public function testReadingFromArray(): void
     {
-        self::assertEquals(
+        self::assertSame(
             'Gile',
             $this->propertyAccess->readFromArray($this->array, 'name'),
-            'Missing readFromArray implementation'
+            'Missing readFromArray implementation',
         );
     }
 
-    public function testReadingFromObject()
+    public function testReadingFromObject(): void
     {
-        self::assertEquals(
+        self::assertSame(
             'Gile',
             $this->propertyAccess->readFromObject($this->object, 'name'),
-            'Missing readFromObject implementation'
+            'Missing readFromObject implementation',
         );
 
-        self::assertEquals(
+        self::assertSame(
             'Les Rambles 1',
             $this->propertyAccess->readFromObject($this->object, 'address'),
-            'Missing readFromObject implementation'
+            'Missing readFromObject implementation',
         );
     }
 
-    public function testWriteToObject()
+    public function testWriteToObject(): void
     {
         $this->propertyAccess->writeToObject($this->object, 'name', 'Mario');
+        // "set_address" is camelized to setAddress(), a "jQuery style" setter.
         $this->propertyAccess->writeToObject($this->object, 'set_address', 'Catalonia');
 
-        self::assertEquals(
+        self::assertSame(
             'Mario',
-           $this->object->name,
-            'Missing writeToObject implementation'
+            $this->object->name,
+            'Missing writeToObject implementation',
         );
 
-        self::assertEquals(
+        self::assertSame(
             'Catalonia',
             $this->object->getAddress(),
-            'Missing writeToObject implementation'
+            'Missing writeToObject implementation',
         );
     }
 
-    public function testWriteToArray()
+    public function testWriteToArray(): void
     {
         $this->propertyAccess->writeToArray($this->array, 'name', 'Mario');
 
-        self::assertEquals(
+        self::assertSame(
             'Mario',
             $this->array['name'],
-            'Missing writeToArray implementation'
+            'Missing writeToArray implementation',
         );
     }
 }
